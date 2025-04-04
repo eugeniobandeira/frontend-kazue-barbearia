@@ -1,0 +1,53 @@
+types {
+    # Text
+    text/html                             html htm shtml;
+    text/css                              css;
+    text/xml                              xml;
+    text/plain                            txt;
+
+    # JavaScript
+    application/javascript                js;
+    application/x-javascript              js;
+
+    # Images
+    image/jpeg                            jpeg jpg;
+    image/png                             png;
+    image/gif                             gif;
+    image/svg+xml                         svg svgz;
+    image/webp                            webp;
+
+    # Fonts
+    font/woff                             woff;
+    font/woff2                            woff2;
+    font/ttf                              ttf;
+    font/otf                              otf;
+
+    # Application
+    application/json                      json;
+    application/pdf                       pdf;
+    application/zip                       zip;
+    application/x-www-form-urlencoded     form;
+    application/x-font-ttf                ttf;
+    application/x-font-otf                otf;
+    application/x-font-woff               woff;
+    application/x-font-woff2              woff2;
+
+    # Audio
+    audio/mpeg                            mp3;
+    audio/ogg                             ogg;
+    audio/wav                             wav;
+
+    # Video
+    video/mp4                             mp4;
+    video/ogg                             ogv;
+    video/webm                            webm;
+
+    # Other
+    application/octet-stream              bin exe dll;
+    application/x-shockwave-flash         swf;
+    application/x-rar-compressed          rar;
+    application/x-tar                     tar;
+    application/x-gzip                    gz;
+    application/x-bzip2                   bz2;
+    application/x-7z-compressed           7z;
+}

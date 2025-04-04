@@ -1,10 +1,16 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { MainComponent } from './core/layout/main/main.component';
+
+const COMPONENTS = [MainComponent];
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  standalone: true,
+  imports: [...COMPONENTS],
+  template: `
+    <div class="relative min-h-screen w-full">
+      <app-main />
+    </div>
+  `,
 })
 export class AppComponent {}
