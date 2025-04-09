@@ -1,0 +1,35 @@
+<div class="status-view-container p-4">
+  <div class="status">
+    <h2 class="text-2xl font-bold mb-4">Status</h2>
+    <p class="text-gray-600 mb-4">Gerencie os tipos de status.</p>
+  </div>
+  <div class="toolbar flex justify-end mb-4">
+    <button
+      pButton
+      type="button"
+      label="Novo Status"
+      icon="pi pi-plus"
+      class="p-button-success p-button-rounded shadow-md"
+      aria-label="Adicionar novo status"
+      (click)="showDialog()"
+    ></button>
+  </div>
+
+  <div class="status-list-container bg-white p-4 rounded-md shadow-sm border border-gray-200">
+    <app-status-list (editStatus)="handleEdit($event)"></app-status-list>
+  </div>
+
+  <p-dialog
+    header="{{ selectedStatus ? 'Editar Status' : 'Cadastrar Status' }}"
+    [(visible)]="visible"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ width: '35rem' }"
+    (onHide)="visible = false"
+    [styleClass]="'custom-service-dialog rounded-lg overflow-hidden'"
+  >
+    <div class="p-3 bg-gray-50">
+      <app-status-form [statusToEdit]="selectedStatus" (onSave)="handleSave()"></app-status-form>
+    </div>
+  </p-dialog>
+</div>

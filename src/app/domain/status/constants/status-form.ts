@@ -1,13 +1,13 @@
 import { inject } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 
-type ServiceFormControl = {
+type StatusFormControl = {
   code: FormControl<string>;
   description: FormControl<string>;
-  price: FormControl<number>;
+  domain: FormControl<string>;
 };
 
-export function createServiceFormControl(): FormGroup<ServiceFormControl> {
+export function createStatusFormControl(): FormGroup<StatusFormControl> {
   const fb = inject(NonNullableFormBuilder);
 
   return fb.group({
@@ -19,13 +19,13 @@ export function createServiceFormControl(): FormGroup<ServiceFormControl> {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    price: new FormControl(0, {
-      validators: [Validators.required, Validators.min(1)],
+    domain: new FormControl('', {
+      validators: [Validators.required],
       nonNullable: true,
     }),
   });
 }
 
-export type ServiceFormGroup = ReturnType<typeof createServiceFormControl>;
+export type StatusFormGroup = ReturnType<typeof createStatusFormControl>;
 
-export type TaskFormValue = ReturnType<ServiceFormGroup['getRawValue']>;
+export type StatusFormValue = ReturnType<StatusFormGroup['getRawValue']>;
