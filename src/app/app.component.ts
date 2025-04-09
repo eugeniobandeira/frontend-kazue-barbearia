@@ -1,16 +1,12 @@
 import { Component } from '@angular/core';
-import { MainComponent } from './core/layout/main/main.component';
+import { RouterModule } from '@angular/router';
 
-const COMPONENTS = [MainComponent];
+const MODULES = [RouterModule];
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [...COMPONENTS],
-  template: `
-    <div class="relative min-h-screen w-full">
-      <app-main />
-    </div>
-  `,
+  imports: [...MODULES],
+  template: ` <router-outlet></router-outlet> `,
 })
 export class AppComponent {}
