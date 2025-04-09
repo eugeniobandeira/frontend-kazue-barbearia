@@ -1,0 +1,19 @@
+<form autocomplete="off" [formGroup]="serviceForm">
+  <div class="flex flex-row gap-2 select-none grid grid-cols-1">
+    <mat-form-field class="w-full">
+      <mat-label for="code" data-testid="code">Código</mat-label>
+      <input formControlName="code" matInput placeholder="Código" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label for="description" data-testid="description">Descrição</mat-label>
+      <input formControlName="description" matInput placeholder="Descrição" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label for="price" data-testid="price">Preço</mat-label>
+      <input formControlName="price" matInput placeholder="preço" type="number" />
+    </mat-form-field>
+  </div>
+  <div class="w-full">
+    <p-button class="w-full" label="Salvar" [disabled]="serviceForm.invalid" (onClick)="onSubmit()" />
+  </div>
+</form>
