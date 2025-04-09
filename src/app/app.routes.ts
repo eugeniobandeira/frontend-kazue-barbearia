@@ -1,13 +1,17 @@
-import { Routes } from '@angular/router';
+import { Route } from '@angular/router';
+import { HomeComponent } from './core/pages/home/home.component';
 
-export const routes: Routes = [
-  {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'home',
-  },
+export const routes: Route[] = [
   {
     path: 'home',
-    loadComponent: () => import('./core/pages/home/home.component').then(c => c.HomeComponent),
+    component: HomeComponent,
+  },
+  {
+    path: 'service',
+    loadComponent: () => import('./domain/service/pages/service-view/service-view.component').then(c => c.ServiceViewComponent),
+  },
+  {
+    path: '**',
+    redirectTo: 'home',
   },
 ];
