@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
-import { createServiceFormControl } from '../../constants/create-service-form';
+import { createServiceFormControl } from '../../constants/service-form';
 import { ServiceApi } from '../../apis/service.api';
 import { SnackBarService } from '@/shared/services/snackbar.service';
 import { iServicePayload, iServiceResponse } from '../../interface/service.interface';
