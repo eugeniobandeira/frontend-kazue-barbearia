@@ -11,6 +11,10 @@ export const routes: Route[] = [
     loadComponent: () => import('./domain/service/pages/service-view/service-view.component').then(c => c.ServiceViewComponent),
   },
   {
+    path: 'status',
+    loadComponent: () => import('./domain/status/pages/status-view/status-view.component').then(c => c.StatusViewComponent),
+  },
+  {
     path: '**',
     redirectTo: 'home',
   },
