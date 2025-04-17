@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
@@ -13,6 +13,7 @@ const MODULES = [MenubarModule, RouterModule, CommonModule];
   styleUrl: './menu.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MenuComponent implements OnInit {
   items: MenuItem[] | undefined;
@@ -24,37 +25,19 @@ export class MenuComponent implements OnInit {
   ngOnInit() {
     this.items = [
       {
-        label: 'Router',
-        icon: 'pi pi-palette',
-        items: [
-          {
-            label: 'Installation',
-            route: '/installation',
-          },
-          {
-            label: 'Configuration',
-            route: '/configuration',
-          },
-        ],
-      },
-      {
-        label: 'Programmatic',
-        icon: 'pi pi-link',
-        command: () => {
-          this.router.navigate(['/installation']);
-        },
-      },
-      {
-        label: 'External',
         icon: 'pi pi-home',
+        route: '/home',
+      },
+      {
+        icon: 'pi pi-user',
         items: [
           {
-            label: 'Angular',
-            url: 'https://angular.io/',
+            label: 'Cadastro',
+            route: '/sign-up',
           },
           {
-            label: 'Vite.js',
-            url: 'https://vitejs.dev/',
+            label: 'Login',
+            route: '/login',
           },
         ],
       },

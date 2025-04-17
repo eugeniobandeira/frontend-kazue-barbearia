@@ -1,5 +1,5 @@
 <div class="card">
-  <p-menubar [model]="items">
+  <p-menubar [model]="items" class="bg-yellow-400">
     <ng-template #item let-item>
       <ng-container *ngIf="item.route; else urlRef">
         <a [routerLink]="item.route" class="p-menubar-item-link">
