@@ -1,14 +1,15 @@
-import { LoadingService } from '@/domain/auth/services/loading.service';
-import { SnackBarService } from '@/shared/services/snackbar.service';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
 import { ServiceApi } from '../../apis/service.api';
 import { TableModule } from 'primeng/table';
-import { iServiceApiResponse, iServiceResponse } from '../../interface/service.interface';
+import { iServiceResponse } from '../../interface/service.interface';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
+import { SnackBarService } from '@/shared/services/snackbar.service';
+import { TooltipModule } from 'primeng/tooltip';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
-const MODULES = [TableModule, CommonModule, ButtonModule];
+const MODULES = [TableModule, CommonModule, ButtonModule, TooltipModule, ProgressSpinnerModule];
 
 @Component({
   selector: 'app-service-list',
@@ -21,17 +22,14 @@ const MODULES = [TableModule, CommonModule, ButtonModule];
 export class ServiceListComponent implements OnInit {
   private readonly _serviceApi = inject(ServiceApi);
   private readonly _snackBarService = inject(SnackBarService);
-  private readonly _isLoading = inject(LoadingService);
   private readonly _destroy$ = inject(DestroyRef);
-  private readonly _cdr = inject(ChangeDetectorRef);
 
-  page: number = 1;
-  pageSize: number = 10;
+  selectedService = signal<iServiceResponse | null>(null);
+  formVisible = signal(false);
 
-  serviceList: iServiceResponse[] = [];
-  loading: boolean = true;
-  selectedService: iServiceResponse | null = null;
-  formVisible = false;
+  public serviceList = signal<iServiceResponse[]>([]);
+
+  public loading = this._serviceApi.loading;
 
   @Output() editService = new EventEmitter<iServiceResponse>();
 
@@ -40,31 +38,20 @@ export class ServiceListComponent implements OnInit {
   }
 
   onLoad(): void {
-    this._isLoading.start();
-    this.loading = true;
-
     this._serviceApi
-      .get({ page: this.page, pageSize: this.pageSize })
+      .get()
       .pipe(takeUntilDestroyed(this._destroy$))
       .subscribe({
-        next: (response: iServiceApiResponse) => {
-          this.serviceList = response?.response || [];
-          this.loading = false;
-          this._cdr.detectChanges();
+        next: response => {
+          this.serviceList.set(response.response);
         },
         error: error => {
-          this._snackBarService.showSnackBar(error?.error?.message || 'Erro ao carregar serviços.', 3000, 'end', 'top');
-          this.loading = false;
-        },
-        complete: () => {
-          this._isLoading.stop();
+          this._snackBarService.showSnackBar(error?.error?.message ?? 'Erro ao carregar serviços.', 3000, 'end', 'top');
         },
       });
   }
 
   onDelete(service: iServiceResponse) {
-    this._isLoading.start();
-
     this._serviceApi
       .delete(service.id)
       .pipe(takeUntilDestroyed(this._destroy$))
@@ -73,22 +60,20 @@ export class ServiceListComponent implements OnInit {
           this._snackBarService.showSnackBar('Serviço excluído com sucesso.', 3000, 'start', 'top');
         },
         error: error => {
-          this._snackBarService.showSnackBar(error?.error?.message || 'Erro ao excluir serviço.', 3000, 'end', 'top');
-        },
-        complete: () => {
-          this.onLoad();
-          this._isLoading.stop();
+          this._snackBarService.showSnackBar(error?.error?.message ?? 'Erro ao excluir serviço.', 3000, 'end', 'top');
         },
       });
   }
 
   onEdit(service: iServiceResponse) {
     this.editService.emit(service);
+    this.selectedService.set(service);
+    this.formVisible.set(true);
   }
 
   handleFormSave() {
-    this.formVisible = false;
-    this.selectedService = null;
+    this.formVisible.set(false);
+    this.selectedService.set(null);
     this.onLoad();
   }
 }

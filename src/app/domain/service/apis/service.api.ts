@@ -1,47 +1,82 @@
-import { inject, Injectable, signal } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '@environments/environment';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { iServiceApiResponse, iServiceGet, iServicePayload, iServiceResponse } from '../interface/service.interface';
+import { iServicePayload, iServiceResponse } from '../interface/service.interface';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { environment } from '@environments/environment';
+import { iApiResponse } from '@/shared/interfaces/api-response.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServiceApi {
+  private readonly _http = inject(HttpClient);
   private readonly API_URL = environment.apiUrl + '/services';
-  private readonly _httpClient = inject(HttpClient);
+  private readonly _serviceList = signal<iServiceResponse[]>([]);
+  private readonly _loading = signal(false);
 
-  public isLoading = signal(false);
-  public serviceList = signal<iServiceResponse[]>([]);
+  public readonly serviceList = this._serviceList.asReadonly();
+  public readonly loading = this._loading.asReadonly();
+  public readonly serviceCount = computed(() => this._serviceList().length);
 
-  public get(req: iServiceGet): Observable<iServiceApiResponse> {
-    let params: HttpParams = new HttpParams();
+  public readonly serviceList$ = this._http.get<iApiResponse<iServiceResponse[]>>(this.API_URL);
 
-    if (req.code) {
-      params = params.set('code', req.code);
-    }
+  public readonly serviceListSignal = toSignal(this.serviceList$, {
+    initialValue: { response: [], resultCount: 0, rowsCount: 0 } as iApiResponse<iServiceResponse[]>,
+  });
 
-    if (req.description) {
-      params = params.set('description', req.description);
-    }
-
-    params = params.set('Page', req.page.toString()).set('PageSize', req.pageSize.toString());
-    return this._httpClient.get<iServiceApiResponse>(this.API_URL, { params });
+  public get(): Observable<iApiResponse<iServiceResponse[]>> {
+    this._loading.set(true);
+    return this._http.get<iApiResponse<iServiceResponse[]>>(this.API_URL).pipe(
+      tap({
+        next: apiResponse => {
+          this._serviceList.set(apiResponse?.response ?? []);
+          this._loading.set(false);
+        },
+        error: () => {
+          this._serviceList.set([]);
+          this._loading.set(false);
+        },
+      })
+    );
   }
 
-  public getById(id: number): Observable<iServiceResponse> {
-    return this._httpClient.get<iServiceResponse>(`${this.API_URL}/${id}`);
+  create(req: iServicePayload): Observable<iServiceResponse> {
+    this._loading.set(true);
+    return this._http.post<iServiceResponse>(this.API_URL, req).pipe(
+      tap({
+        next: newService => {
+          this._serviceList.update(list => [...list, newService]);
+          this._loading.set(false);
+        },
+        error: () => this._loading.set(false),
+      })
+    );
   }
 
-  public create(req: iServicePayload): Observable<iServiceResponse> {
-    return this._httpClient.post<iServiceResponse>(this.API_URL, req);
+  update(id: number, req: iServicePayload): Observable<iServiceResponse> {
+    this._loading.set(true);
+    return this._http.put<iServiceResponse>(`${this.API_URL}/${id}`, req).pipe(
+      tap({
+        next: updatedService => {
+          this._serviceList.update(list => list.map(item => (item.id === id ? updatedService : item)));
+          this._loading.set(false);
+        },
+        error: () => this._loading.set(false),
+      })
+    );
   }
 
-  public update(id: number, req: iServicePayload): Observable<iServiceResponse> {
-    return this._httpClient.put<iServiceResponse>(`${this.API_URL}/${id}`, req);
-  }
-
-  public delete(id: number): Observable<void> {
-    return this._httpClient.delete<void>(`${this.API_URL}/${id}`);
+  delete(id: number): Observable<void> {
+    this._loading.set(true);
+    return this._http.delete<void>(`${this.API_URL}/${id}`).pipe(
+      tap({
+        next: () => {
+          this._serviceList.update(list => list.filter(item => item.id !== id));
+          this._loading.set(false);
+        },
+        error: () => this._loading.set(false),
+      })
+    );
   }
 }

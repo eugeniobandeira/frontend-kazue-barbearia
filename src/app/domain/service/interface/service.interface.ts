@@ -17,9 +17,3 @@ export interface iServiceGet {
   page: number;
   pageSize: number;
 }
-
-export interface iServiceApiResponse {
-  response: iServiceResponse[];
-  resultCount: number;
-  rowsCount: number;
-}

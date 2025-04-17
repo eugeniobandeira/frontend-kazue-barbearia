@@ -1,33 +1,68 @@
-<div class="card">
-  <p-table [value]="serviceList" [paginator]="true" [rows]="5" [loading]="loading" [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5, 10, 20]">
+<div class="service-list-wrapper">
+  <p-table
+    [value]="serviceList()"
+    [paginator]="true"
+    [rows]="5"
+    [loading]="loading()"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    [responsive]="true"
+    styleClass="p-datatable-responsive p-datatable-sm"
+    [tableStyle]="{ 'min-width': '100%', 'table-layout': 'auto' }"
+  >
     <ng-template pTemplate="header">
       <tr>
-        <th>Id</th>
-        <th>Código</th>
-        <th>Descrição</th>
-        <th>Preço</th>
-        <th>Ação</th>
+        <th class="whitespace-nowrap w-[80px]">ID</th>
+        <th class="whitespace-nowrap w-[120px]">Código</th>
+        <th class="whitespace-nowrap min-w-[180px]">Descrição</th>
+        <th class="whitespace-nowrap w-[120px]">Preço R$</th>
+        <th class="whitespace-nowrap w-[100px]">Ações</th>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-service>
       <tr>
-        <td>{{service?.id}}</td>
-        <td>{{service?.code}}</td>
-        <td>{{service?.description}}</td>
-        <td>{{service?.price | currency:'BRL'}}</td>
+        <td class="text-center">{{ service.id }}</td>
+        <td class="font-medium text-center">{{ service.code }}</td>
+        <td class="truncate max-w-[180px] px-2">{{ service.description }}</td>
+        <td class="text-right pr-4">{{ service.price | currency:'BRL' }}</td>
         <td>
-          <div class="flex justify-content-center gap-2">
-            <p-button icon="pi pi-pencil" class="p-button-rounded p-button-text" [disabled]="loading" (click)="onEdit(service)" (keydown.enter)="onEdit(service)"></p-button>
-            <p-button icon="pi pi-trash" class="p-button-rounded p-button-text" [disabled]="loading" (click)="onDelete(service)" (keydown.enter)="onDelete(service)"></p-button>
+          <div class="flex justify-center gap-1">
+            <button
+              pButton
+              pRipple
+              icon="pi pi-pencil"
+              class="p-button-rounded p-button-text p-button-sm"
+              [disabled]="loading()"
+              (click)="onEdit(service)"
+              pTooltip="Editar"
+              tooltipPosition="top"
+            ></button>
+            <button
+              pButton
+              pRipple
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-text p-button-sm"
+              [disabled]="loading()"
+              (click)="onDelete(service)"
+              pTooltip="Excluir"
+              tooltipPosition="top"
+            ></button>
           </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="loading">
+      <tr>
+        <td colspan="5" class="text-center py-4">
+          <p-progressSpinner *ngIf="loading()" styleClass="w-8 h-8"></p-progressSpinner>
         </td>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="4">{{loading ? 'Carregando....' : 'Nenhum serviço encontrado'}}</td>
+        <td colspan="5" class="text-center py-4">{{ loading() ? 'Carregando...' : 'Nenhum serviço encontrado' }}</td>
       </tr>
     </ng-template>
   </p-table>

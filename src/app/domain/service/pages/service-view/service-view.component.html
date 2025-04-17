@@ -1,21 +1,22 @@
-<div class="service-view-container p-4">
-  <div class="services">
-    <h2 class="text-2xl font-bold mb-4">Serviços</h2>
-    <p class="text-gray-600 mb-4">Gerencie os serviços oferecidos pela barbearia.</p>
+<div class="service-view-container p-2 md:p-4">
+  <div class="services mb-4">
+    <h2 class="text-xl md:text-2xl font-bold">Serviços</h2>
+    <p class="text-gray-600 text-sm md:text-base">Gerencie os serviços oferecidos pela barbearia.</p>
   </div>
+
   <div class="toolbar flex justify-end mb-4">
     <button
       pButton
       type="button"
       label="Novo Serviço"
       icon="pi pi-plus"
-      class="p-button-success p-button-rounded shadow-md"
+      class="p-button-success p-button-sm md:p-button p-button-rounded shadow-md"
       aria-label="Adicionar novo serviço"
       (click)="showDialog()"
     ></button>
   </div>
 
-  <div class="service-list-container bg-white p-4 rounded-md shadow-sm border border-gray-200">
+  <div class="service-list-container bg-white p-2 md:p-4 rounded-md shadow-sm border border-gray-200">
     <app-service-list (editService)="handleEdit($event)"></app-service-list>
   </div>
 
@@ -24,11 +25,12 @@
     [(visible)]="visible"
     [modal]="true"
     [dismissableMask]="true"
+    [breakpoints]="{'960px': '75vw', '640px': '90vw'}"
     [style]="{ width: '35rem' }"
     (onHide)="visible = false"
     [styleClass]="'custom-service-dialog rounded-lg overflow-hidden'"
   >
-    <div class="p-3 bg-gray-50">
+    <div class="p-2 md:p-3 bg-gray-50">
       <app-service-form [serviceToEdit]="selectedService" (onSave)="handleSave()"></app-service-form>
     </div>
   </p-dialog>
