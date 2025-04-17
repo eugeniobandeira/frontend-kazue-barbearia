@@ -1,13 +1,12 @@
-import { LoadingService } from '@/domain/auth/services/loading.service';
-import { SnackBarService } from '@/shared/services/snackbar.service';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { iStatusResponse } from '../../interfaces/status.interface';
-import { iApiResponse } from '@/shared/interfaces/api-response.interface';
 import { StatusApi } from '../../apis/status.api';
+import { SnackBarService } from '@/shared/services/snackbar.service';
+import { LoadingService } from '@/domain/auth/services/loading.service';
 
 const MODULES = [TableModule, CommonModule, ButtonModule];
 
@@ -24,15 +23,12 @@ export class StatusListComponent implements OnInit {
   private readonly _snackBarService = inject(SnackBarService);
   private readonly _isLoading = inject(LoadingService);
   private readonly _destroy$ = inject(DestroyRef);
-  private readonly _cdr = inject(ChangeDetectorRef);
 
-  page: number = 1;
-  pageSize: number = 10;
+  selectedStatus = signal<iStatusResponse | null>(null);
+  formVisible = signal(false);
 
-  statusList: iStatusResponse[] = [];
-  loading: boolean = true;
-  selectedStatus: iStatusResponse | null = null;
-  formVisible = false;
+  statusList = this._statusApi.statusList;
+  loading = this._statusApi.isLoading;
 
   @Output() editStatus = new EventEmitter<iStatusResponse>();
 
@@ -42,20 +38,12 @@ export class StatusListComponent implements OnInit {
 
   onLoad(): void {
     this._isLoading.start();
-    this.loading = true;
-
     this._statusApi
-      .get({ page: this.page, pageSize: this.pageSize })
+      .loadAll()
       .pipe(takeUntilDestroyed(this._destroy$))
       .subscribe({
-        next: (response: iApiResponse<iStatusResponse>) => {
-          this.statusList = response?.response || [];
-          this.loading = false;
-          this._cdr.detectChanges();
-        },
         error: error => {
           this._snackBarService.showSnackBar(error?.error?.message || 'Erro ao carregar status.', 3000, 'center', 'bottom');
-          this.loading = false;
         },
         complete: () => {
           this._isLoading.stop();
@@ -77,7 +65,6 @@ export class StatusListComponent implements OnInit {
           this._snackBarService.showSnackBar(error?.error?.message || 'Erro ao excluir status.', 3000, 'center', 'bottom');
         },
         complete: () => {
-          this.onLoad();
           this._isLoading.stop();
         },
       });
@@ -85,11 +72,13 @@ export class StatusListComponent implements OnInit {
 
   onEdit(status: iStatusResponse) {
     this.editStatus.emit(status);
+    this.selectedStatus.set(status);
+    this.formVisible.set(true);
   }
 
   handleFormSave() {
-    this.formVisible = false;
-    this.selectedStatus = null;
+    this.formVisible.set(false);
+    this.selectedStatus.set(null);
     this.onLoad();
   }
 }

@@ -5,7 +5,7 @@ export interface iStatusResponse {
   domain: string;
 }
 
-export interface iStatusPayload {
+export interface iStatusRequest {
   code: string;
   description: string;
   domain: string;

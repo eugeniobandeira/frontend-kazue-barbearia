@@ -1,5 +1,5 @@
 export interface iApiResponse<TResponse> {
-  response: TResponse[];
+  response: TResponse;
   resultCount: number;
   rowsCount: number;
 }

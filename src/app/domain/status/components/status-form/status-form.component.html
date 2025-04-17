@@ -1,19 +1,30 @@
+@if (statusForm) {
 <form autocomplete="off" [formGroup]="statusForm">
   <div class="flex flex-row gap-2 select-none grid grid-cols-1">
     <mat-form-field class="w-full">
       <mat-label for="code" data-testid="code">Código</mat-label>
-      <input formControlName="code" matInput placeholder="Código" />
+      <input formControlName="code" matInput placeholder="Código" [attr.aria-busy]="formState().submitted" />
     </mat-form-field>
+
     <mat-form-field>
       <mat-label for="description" data-testid="description">Descrição</mat-label>
-      <input formControlName="description" matInput placeholder="Descrição" />
+      <input formControlName="description" matInput placeholder="Descrição" [attr.aria-disabled]="formState().submitted" />
     </mat-form-field>
+
     <mat-form-field>
       <mat-label for="domain" data-testid="domain">Domínio</mat-label>
-      <input formControlName="domain" matInput placeholder="Domínio" type="text" />
+      <input formControlName="domain" matInput placeholder="Domínio" type="text" [attr.aria-busy]="formState().submitted" />
     </mat-form-field>
   </div>
+
   <div class="w-full">
-    <p-button class="w-full" label="Salvar" [disabled]="statusForm.invalid" (onClick)="onSubmit()" />
+    @if (formState().submitted) {
+    <p-button class="w-full" label="Processando..." icon="pi pi-spinner pi-spin" [disabled]="true" />
+    } @else {
+    <p-button class="w-full" label="Salvar" [disabled]="statusForm.invalid || formState().submitted" (onClick)="onSubmit()" />
+    } @if (errorMessage()) {
+    <p-message severity="error" class="mt-2"> {{ errorMessage() }} </p-message>
+    }
   </div>
 </form>
+}
