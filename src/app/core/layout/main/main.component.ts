@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { FooterComponent } from '../footer/footer.component';
 import { HeaderComponent } from '../header/header.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { RouterModule } from '@angular/router';
 import { MenuComponent } from '../menu/menu.component';
+import { HeroComponent } from './components/hero/hero.component';
 
-const COMPONENTS = [HeaderComponent, FooterComponent, SidebarComponent, MenuComponent];
+const COMPONENTS = [HeaderComponent, FooterComponent, MenuComponent, HeroComponent];
 const MODULES = [RouterModule];
 
 @Component({
@@ -15,10 +15,4 @@ const MODULES = [RouterModule];
   styleUrl: './main.component.scss',
   standalone: true,
 })
-export class MainComponent {
-  isSidebarOpen = false;
-
-  toggleSidebar() {
-    this.isSidebarOpen = !this.isSidebarOpen;
-  }
-}
+export class MainComponent {}
