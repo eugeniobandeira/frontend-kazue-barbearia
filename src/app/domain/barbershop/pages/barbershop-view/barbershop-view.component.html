@@ -1,0 +1,9 @@
+<div class="barbershop-view-container">
+  <app-manage-status></app-manage-status>
+
+  <p-button label="Atualizar Status" icon="pi pi-refresh" (click)="showDialog()" class="status-button p-button-outlined" severity="contrast"> </p-button>
+
+  <p-dialog header="Atualizar Status" [(visible)]="displayDialog" [style]="{width: '360px'}" [modal]="true" [dismissableMask]="true" [closable]="true">
+    <app-manage-status-form (formCancel)="displayDialog = false"></app-manage-status-form>
+  </p-dialog>
+</div>

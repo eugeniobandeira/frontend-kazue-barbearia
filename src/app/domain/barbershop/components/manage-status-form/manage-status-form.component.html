@@ -1,0 +1,32 @@
+<form autocomplete="off" [formGroup]="accessCodeForm" class="form-container">
+  <div class="form-grid p-fluid">
+    <!-- Campo PIN -->
+    <div class="form-group">
+      <label for="accessCode" class="form-label"> <i class="pi pi-lock"></i> Código PIN </label>
+      <input
+        pInputText
+        id="accessCode"
+        formControlName="accessCode"
+        placeholder="Digite 4 dígitos"
+        maxlength="4"
+        class="form-input"
+        [ngClass]="{'p-invalid': accessCodeForm.get('accessCode')?.invalid && accessCodeForm.get('accessCode')?.touched}"
+      />
+      <small *ngIf="accessCodeForm.get('accessCode')?.invalid && accessCodeForm.get('accessCode')?.touched" class="p-error error-message">
+        <i class="pi pi-exclamation-circle"></i> PIN deve ter 4 dígitos
+      </small>
+    </div>
+
+    <!-- Campo Status -->
+    <div class="form-group">
+      <label for="status" class="form-label"> <i class="pi pi-info-circle"></i> Status </label>
+      <p-dropdown id="status" [options]="statusOptions" formControlName="isOpen" optionLabel="label" optionValue="value" placeholder="Selecione o status" class="form-dropdown">
+      </p-dropdown>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <p-button label="Cancelar" icon="pi pi-times" class="p-button-outlined p-button-secondary" (click)="onCancel()"> </p-button>
+    <p-button label="Atualizar" icon="pi pi-check" [disabled]="accessCodeForm.invalid" class="p-button-primary" (click)="onSubmit()"> </p-button>
+  </div>
+</form>
