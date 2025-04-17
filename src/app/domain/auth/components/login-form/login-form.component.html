@@ -1,0 +1,92 @@
+<div class="min-h-screen flex flex-col md:flex-row bg-gray-100">
+  <div class="hidden md:flex md:w-1/2 h-screen items-center justify-center bg-[#0f172a] text-white">
+    <div class="flex flex-col items-center gap-4 w-full h-full">
+      <img
+        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcascobayhemp.com%2Fwp-content%2Fuploads%2F2023%2F04%2Fnathon-oski-EW_rqoSdDes-unsplash.jpg&f=1&nofb=1&ipt=afd77d6802e14d7300275d426002c2f05a07d6a5af87f2532918c307e2cde457"
+        alt="Imagem da barbearia"
+        class="w-full h-full object-cover"
+      />
+    </div>
+  </div>
+
+  <div class="md:w-1/2 flex items-center justify-center p-6 md:p-12 min-h-screen">
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden">
+      <div class="bg-gray-900 py-6 px-8 text-center rounded-t-3xl">
+        <h1 class="text-3xl font-extrabold text-yellow-400 mb-1">Kazue Barbearia</h1>
+        <p class="text-gray-300 text-sm">Bem vindo de volta! Faça login para que possa entrar na fila.</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="p-8 space-y-6">
+        <div>
+          <label for="email" class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+          <div class="relative">
+            <i class="pi pi-envelope absolute top-3 left-3 text-gray-400"></i>
+            <input
+              pInputText
+              id="email"
+              type="email"
+              formControlName="email"
+              autocomplete="email"
+              placeholder="seu@email.com"
+              class="w-full pl-10 pr-4 py-3 border rounded-lg transition-all focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+              [ngClass]="{
+                'border-red-500 ring-red-500': loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)
+              }"
+            />
+          </div>
+          <small *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)" class="text-red-600 text-xs mt-1 block">
+            {{ loginForm.get('email')?.errors?.['required'] ? 'Email é obrigatório' : 'Email inválido' }}
+          </small>
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-semibold text-gray-700 mb-1">Senha</label>
+          <div class="relative flex items-center">
+            <i class="pi pi-lock absolute left-3 text-gray-500 z-10"></i>
+            <p-password
+              id="password"
+              formControlName="password"
+              [toggleMask]="true"
+              [feedback]="false"
+              autocomplete="current-password"
+              placeholder="Digite sua senha"
+              class="w-full"
+              [inputStyle]="{
+                paddingLeft: '2.5rem',
+                width: '100%'
+              }"
+              inputStyleClass="w-full pl-10 pr-4 py-3 border rounded-lg transition-all focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+              [ngClass]="{
+                'border-red-500 ring-red-500': loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)
+              }"
+            ></p-password>
+          </div>
+          <small *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)" class="text-red-600 text-xs mt-1 block">
+            Senha é obrigatória
+          </small>
+        </div>
+
+        <!-- ToDo -->
+        <!-- <div class="text-right text-sm">
+          <a routerLink="/esqueci-senha" class="text-yellow-600 hover:underline">Esqueceu a senha?</a>
+        </div> -->
+
+        <div>
+          <p-button
+            type="submit"
+            label="Entrar"
+            icon="pi pi-sign-in"
+            [disabled]="loginForm.invalid"
+            severity="contrast"
+            styleClass="w-full p-button-lg bg-black hover:bg-gray-900 border-0 text-white font-bold shadow-md"
+          ></p-button>
+        </div>
+
+        <div class="text-center text-md text-gray-500">
+          Não tem uma conta?
+          <a routerLink="/sign-up" class="font-bold text-yellow-400 hover:underline font-medium">Cadastre-se</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

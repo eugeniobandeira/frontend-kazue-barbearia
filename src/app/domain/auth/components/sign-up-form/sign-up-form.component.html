@@ -1,0 +1,165 @@
+<div class="min-h-screen flex flex-col md:flex-row">
+  <div class="hidden md:block md:w-1/2 h-screen">
+    <img
+      src="https://images.unsplash.com/photo-1621645582931-d1d3e6564943?q=80&w=2564&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      alt="Barbearia"
+      class="w-full h-full object-cover overflow-hidden"
+    />
+  </div>
+
+  <div class="md:w-1/2 flex items-center justify-center py-8 px-4">
+    <div class="max-w-md w-full bg-white rounded-xl shadow-2xl overflow-hidden">
+      <div class="bg-gray-900 py-5 px-6 text-center">
+        <h1 class="text-2xl font-bold text-yellow-400 mb-1">Kazue Barbearia</h1>
+        <p class="text-gray-300 text-md">Formulário de Cadastro</p>
+      </div>
+
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="p-6 space-y-5">
+        <div class="space-y-1">
+          <label for="fullname" class="block text-sm font-medium text-gray-700">Nome e Sobrenome</label>
+          <div class="relative flex items-center">
+            <i class="pi pi-user absolute left-3 text-gray-500"></i>
+            <input
+              pInputText
+              id="fullname"
+              type="text"
+              formControlName="fullname"
+              placeholder="Seu nome e sobrenome"
+              class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              [ngClass]="{'border-red-500 ring-red-500': signupForm.get('fullname')?.invalid && (signupForm.get('fullname')?.dirty || signupForm.get('fullname')?.touched)}"
+            />
+          </div>
+          <small *ngIf="signupForm.get('fullname')?.invalid && (signupForm.get('fullname')?.dirty || signupForm.get('fullname')?.touched)" class="text-red-600 text-xs">
+            Nome completo é obrigatório
+          </small>
+        </div>
+
+        <div class="flex items-center gap-3 p-3 rounded-lg border border-gray-200">
+          <p-inputSwitch id="nicknamePreference" formControlName="nicknamePreference" styleClass="p-inputswitch-sm"></p-inputSwitch>
+          <label for="nicknamePreference" class="text-sm font-medium text-gray-700"> Usar apelido como nome principal? </label>
+        </div>
+
+        <div *ngIf="signupForm.get('nicknamePreference')?.value" class="animate-fadeIn space-y-1">
+          <label for="nickname" class="block text-sm font-medium text-gray-700">Apelido</label>
+          <div class="relative flex items-center">
+            <i class="pi pi-tag absolute left-3 text-gray-500"></i>
+            <input
+              pInputText
+              id="nickname"
+              type="text"
+              formControlName="nickname"
+              placeholder="Como prefere ser chamado?"
+              class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              [ngClass]="{'border-red-500 ring-red-500': signupForm.get('nickname')?.invalid && (signupForm.get('nickname')?.dirty || signupForm.get('nickname')?.touched)}"
+            />
+          </div>
+          <small *ngIf="signupForm.get('nickname')?.invalid && (signupForm.get('nickname')?.dirty || signupForm.get('nickname')?.touched)" class="text-red-600 text-xs">
+            Apelido é obrigatório
+          </small>
+        </div>
+
+        <div class="space-y-1">
+          <label for="dateOfBirth" class="block text-sm font-medium text-gray-700">Data de Nascimento</label>
+          <div class="relative flex items-center w-full">
+            <i class="pi pi-calendar absolute left-3 text-gray-500"></i>
+            <input
+              type="date"
+              name="dateOfBirth"
+              id="dateOfBirth"
+              formControlName="dateOfBirth"
+              class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              [ngClass]="{'border-red-500 ring-red-500': signupForm.get('dateOfBirth')?.invalid && (signupForm.get('dateOfBirth')?.dirty || signupForm.get('dateOfBirth')?.touched)}"
+            />
+            <!-- <p-calendar
+              id="dateOfBirth"
+              formControlName="dateOfBirth"
+              [showIcon]="false"
+              [monthNavigator]="true"
+              [yearNavigator]="true"
+              placeholder="Sua data de nascimento"
+              class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              [ngClass]="{'border-red-500 ring-red-500': signupForm.get('dateOfBirth')?.invalid && (signupForm.get('dateOfBirth')?.dirty || signupForm.get('dateOfBirth')?.touched)}"
+            ></p-calendar> -->
+          </div>
+          <small *ngIf="signupForm.get('dateOfBirth')?.invalid && (signupForm.get('dateOfBirth')?.dirty || signupForm.get('dateOfBirth')?.touched)" class="text-red-600 text-xs">
+            Data de nascimento é obrigatória
+          </small>
+        </div>
+
+        <div class="space-y-1">
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <div class="relative flex items-center">
+            <i class="pi pi-envelope absolute left-3 text-gray-500"></i>
+            <input
+              pInputText
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="seu@email.com"
+              class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              [ngClass]="{'border-red-500 ring-red-500': signupForm.get('email')?.invalid && (signupForm.get('email')?.dirty || signupForm.get('email')?.touched)}"
+            />
+          </div>
+          <small *ngIf="signupForm.get('email')?.invalid && (signupForm.get('email')?.dirty || signupForm.get('email')?.touched)" class="text-red-600 text-xs">
+            {{ signupForm.get('email')?.errors?.['required'] ? 'Email é obrigatório' : 'Email inválido' }}
+          </small>
+        </div>
+
+        <div class="space-y-1">
+          <label for="phone" class="block text-sm font-medium text-gray-700">Telefone</label>
+          <div class="relative flex items-center">
+            <i class="pi pi-phone absolute left-3 text-gray-500"></i>
+            <p-inputMask
+              id="phone"
+              formControlName="phone"
+              mask="(99) 99999-9999"
+              placeholder="(99) 99999-9999"
+              class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              [ngClass]="{'border-red-500 ring-red-500': signupForm.get('phone')?.invalid && (signupForm.get('phone')?.dirty || signupForm.get('phone')?.touched)}"
+              inputStyleClass="w-full pl-10"
+            ></p-inputMask>
+          </div>
+          <small *ngIf="signupForm.get('phone')?.invalid && (signupForm.get('phone')?.dirty || signupForm.get('phone')?.touched)" class="text-red-600 text-xs">
+            Telefone é obrigatório
+          </small>
+        </div>
+
+        <div class="space-y-1">
+          <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+          <div class="relative flex items-center">
+            <i class="pi pi-lock absolute left-3 text-gray-500 z-10"></i>
+            <p-password
+              id="password"
+              formControlName="password"
+              [toggleMask]="true"
+              [feedback]="true"
+              placeholder="Crie uma senha segura"
+              class="w-full"
+              [ngClass]="{'border-red-500 ring-red-500': signupForm.get('password')?.invalid && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)}"
+              [inputStyle]="{'padding-left': '2.5rem', 'width': '100%'}"
+              inputStyleClass="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            ></p-password>
+          </div>
+          <small *ngIf="signupForm.get('password')?.invalid && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)" class="text-red-600 text-xs">
+            {{ signupForm.get('password')?.errors?.['required'] ? 'Senha é obrigatória' : 'Senha deve ter pelo menos 6 caracteres' }}
+          </small>
+        </div>
+
+        <div class="pt-4">
+          <p-button
+            type="submit"
+            label="Cadastrar"
+            icon="pi pi-check"
+            [disabled]="signupForm.invalid"
+            severity="contrast"
+            styleClass="w-full p-button-lg bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 border-0 text-white font-bold shadow-lg"
+          ></p-button>
+        </div>
+
+        <div class="text-center text-sm text-gray-500 pt-2">
+          Já é cliente? <a routerLink="/login" class="font-bold text-yellow-400 hover:underline font-medium">Acesse sua conta</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
