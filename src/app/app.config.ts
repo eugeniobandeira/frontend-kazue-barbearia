@@ -3,9 +3,12 @@ import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
+import { provideHttpClient, withInterceptors, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './core/interceptor/auth.interceptor';
+import { loadingInterceptor } from './core/interceptor/loading.interceptor';
+import { errorInterceptor } from './core/interceptor/error.interceptor';
 
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,6 +20,18 @@ export const appConfig: ApplicationConfig = {
         preset: Aura,
       },
     }),
-    provideHttpClient(),
+
+    // 1. Configure o HttpClient primeiro
+    provideHttpClient(
+      withInterceptorsFromDi(), // Habilita interceptors de classe (DI-based)
+      withInterceptors([
+        // Adiciona interceptors funcionais
+        loadingInterceptor,
+        errorInterceptor,
+      ])
+    ),
+
+    // 2. Registre o interceptor de classe
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
 };
