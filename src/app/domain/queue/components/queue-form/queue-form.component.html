@@ -1,0 +1,54 @@
+<div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Entrar na Fila</h2>
+
+  <form [formGroup]="queueForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div class="space-y-2">
+      <label for="idBarber" class="block text-sm font-medium text-gray-700">Barbeiro</label>
+      <p-dropdown
+        id="idBarber"
+        formControlName="idBarber"
+        [options]="barberList()"
+        optionLabel="fullname"
+        optionValue="id"
+        placeholder="Selecione um barbeiro"
+        class="w-full"
+      ></p-dropdown>
+    </div>
+
+    <div class="space-y-2">
+      <label for="services" class="block text-sm font-medium text-gray-700">Serviços</label>
+      <p-multiSelect
+        formControlName="idServices"
+        [options]="serviceList()"
+        optionLabel="description"
+        optionValue="id"
+        placeholder="Selecione os serviços"
+        display="chip"
+        [filter]="true"
+        class="w-full"
+      >
+      </p-multiSelect>
+    </div>
+
+    <div class="space-y-2">
+      <label for="amount" class="block text-sm font-medium text-gray-700">Valor Total</label>
+      <input pInputText id="amount" formControlName="amount" placeholder="R$ 0,00" readonly class="w-full p-2 border rounded-md bg-gray-100" />
+    </div>
+
+    <div class="flex-auto">
+      <label for="validationCode">Código de validação</label>
+      <input type="text" id="validationCode" pInputText formControlName="validationCode" maxlength="4" class="w-full p-2 border rounded-md" />
+    </div>
+
+    <div class="pt-4">
+      <button
+        pButton
+        type="submit"
+        label="Entrar na Fila"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md"
+        severity="contrast"
+        [disabled]="queueForm.invalid || !isOk()"
+      ></button>
+    </div>
+  </form>
+</div>
