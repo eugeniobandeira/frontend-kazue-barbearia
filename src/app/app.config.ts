@@ -20,18 +20,7 @@ export const appConfig: ApplicationConfig = {
         preset: Aura,
       },
     }),
-
-    // 1. Configure o HttpClient primeiro
-    provideHttpClient(
-      withInterceptorsFromDi(), // Habilita interceptors de classe (DI-based)
-      withInterceptors([
-        // Adiciona interceptors funcionais
-        loadingInterceptor,
-        errorInterceptor,
-      ])
-    ),
-
-    // 2. Registre o interceptor de classe
+    provideHttpClient(withInterceptorsFromDi(), withInterceptors([loadingInterceptor, errorInterceptor])),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
 };
