@@ -20,7 +20,7 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { DividerModule } from 'primeng/divider';
 import { CardModule } from 'primeng/card';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 const MODULES = [
@@ -56,6 +56,7 @@ export class SignUpFormComponent implements OnInit {
   private readonly _snackBarService = inject(SnackBarService);
   public readonly _isLoading = inject(LoadingService);
   private readonly _destroy$ = inject(DestroyRef);
+  private readonly router = inject(Router);
 
   @Output() onSave = new EventEmitter<void>();
 
@@ -106,7 +107,7 @@ export class SignUpFormComponent implements OnInit {
     this._userApi
       .create(req)
       .pipe(
-        delay(4000),
+        delay(500),
         finalize(() => this._isLoading.stop()),
         takeUntilDestroyed(this._destroy$)
       )
@@ -122,6 +123,7 @@ export class SignUpFormComponent implements OnInit {
           this._snackBarService.showSnackBar('Usuário cadastrado com sucesso!', 3000, 'center', 'bottom');
           this.signupForm.reset();
           this.onSave.emit();
+          this.router.navigate(['/login']);
         },
       });
   }
