@@ -1,0 +1,123 @@
+<div class="flex items-center justify-center">
+  <div *ngIf="shouldShowQueue()" class="w-[380px] md:w-[700px] lg:w-[900px] p-5">
+    <p-toast></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+
+    <p-table [value]="queue()" [loading]="loading()" stripedRows>
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Cliente</th>
+          <th>Barbeiro</th>
+          <th>Serviços</th>
+          <th>Chegada</th>
+          <th>Status</th>
+          <th class="text-center">Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-item>
+        <tr [ngClass]="rowClass(item)" [ngStyle]="rowStyle(item)">
+          <td>@if (item.customer?.nicknamePreference && item.customer?.nickname) { {{ item.customer.nickname }} } @else { {{ item.customer?.fullname }} }</td>
+          <td>{{ item.barber?.fullname }}</td>
+          <td>
+            <ul class="m-0 p-0">
+              @for (service of item.services; track service.id) {
+              <li>{{ service.description }}</li>
+              }
+            </ul>
+          </td>
+          <td>{{ item.dtCheckinAt | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+          <td>
+            <p-tag [value]="item.status.description" [severity]="getSeverity(item.status.description)"></p-tag>
+          </td>
+          <td class="text-center">
+            <div class="flex gap-2 justify-center">
+              <button
+                pButton
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-sm p-button-secondary"
+                (click)="openEditDialog(item)"
+                pTooltip="Editar atendimento"
+                tooltipPosition="top"
+              ></button>
+
+              <button
+                pButton
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-sm p-button-danger"
+                [disabled]="item.status.description === 'FINALIZADO'"
+                (click)="confirmDelete(item.id)"
+                pTooltip="Cancelar atendimento"
+                tooltipPosition="top"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="text-center py-4">Nenhum agendamento encontrado para hoje.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <div *ngIf="!shouldShowQueue()" class="p-4 text-center">
+    <p-tag [severity]="'danger'" [value]="'BARBEARIA FECHADA'" *ngIf="!barbershopInfo().isOpen"></p-tag>
+    <p class="mt-2">Nenhuma fila disponível no momento</p>
+  </div>
+</div>
+
+<p-dialog
+  header="Atualizar Atendimento"
+  [(visible)]="showDialog"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '100%', maxWidth: '320px' }"
+  [breakpoints]="{ '960px': '95vw' }"
+  styleClass="responsive-dialog"
+>
+  <form [formGroup]="queueForm" (ngSubmit)="onEditSubmit()" class="p-fluid formgrid grid">
+    <div class="field col-1 w-full">
+      <label>Cliente</label>
+      <div class="p-inputtext p-disabled custom-readonly-field w-full">{{ selectedItem?.customer?.fullname }}</div>
+    </div>
+
+    <div class="field col-1">
+      <label for="idBarber">Barbeiro</label>
+      <p-dropdown
+        id="idBarber"
+        formControlName="idBarber"
+        [options]="barberList()"
+        optionLabel="fullname"
+        optionValue="id"
+        placeholder="Selecione um barbeiro"
+        [loading]="loadingBarbers()"
+        [showClear]="true"
+        appendTo="body"
+        class="w-full"
+      ></p-dropdown>
+    </div>
+
+    <div class="field col-1">
+      <label for="idStatus">Status</label>
+      <p-dropdown
+        id="idStatus"
+        formControlName="idStatus"
+        [options]="statusList()"
+        optionLabel="description"
+        optionValue="id"
+        placeholder="Selecione o status"
+        appendTo="body"
+        class="w-full"
+      ></p-dropdown>
+    </div>
+
+    <div class="field col-1 flex flex-column md:flex-row justify-content-end gap-2 mt-3 w-full">
+      <button pButton type="button" label="Cancelar" icon="pi pi-times" class="p-button-secondary w-full md:w-auto" (click)="displayEditDialog.set(false)"></button>
+      <button pButton type="submit" label="Salvar" icon="pi pi-check" class="p-button-primary w-full md:w-auto" [disabled]="queueForm.invalid"></button>
+    </div>
+  </form>
+</p-dialog>

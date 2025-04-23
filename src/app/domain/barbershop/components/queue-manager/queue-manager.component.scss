@@ -1,0 +1,15 @@
+::ng-deep .custom-readonly-field {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  background: #f4f4f5; /* similar ao PrimeNG disabled */
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  color: #6b7280; /* cor do texto mais suave */
+  font-size: 1rem;
+  min-height: 2.5rem;
+  line-height: 1.5;
+}
+
+::ng-deep p-dropdown {
+  background-color: red;
+}
