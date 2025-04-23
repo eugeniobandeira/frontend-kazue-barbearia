@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '@environments/environment';
-import { iUserCreateRequest, iUserGet, iUserProfileResponse, iUserRegisteredResponse, iUserShortResponse, iUserUpdate } from '../interfaces/user.interface';
+import { iUser, iUserCreateRequest, iUserGet, iUserProfileResponse, iUserRegisteredResponse, iUserShortResponse, iUserUpdate } from '../interfaces/user.interface';
 import { iChangePassword } from '@/domain/auth/interfaces/request/change-password.interface';
 import { map, Observable, tap } from 'rxjs';
 import { eRoles } from '@/shared/enums/roles.enum';
@@ -35,6 +35,17 @@ export class UserApi {
     let params = new HttpParams().set('page', req.page.toString()).set('pageSize', req.pageSize.toString());
 
     return this._httpClient.get<iUserShortResponse[]>(this.API_URL, { params });
+  }
+
+  public getAllUsers(req: iUserGet): Observable<iUser[]> {
+    let params = new HttpParams().set('page', req.page.toString()).set('pageSize', req.pageSize.toString());
+
+    if (req.fullname) params = params.set('fullname', req.fullname);
+    if (req.nickname) params = params.set('nickname', req.nickname);
+    if (req.email) params = params.set('email', req.email);
+    if (req.phone) params = params.set('phone', req.phone);
+
+    return this._httpClient.get<iApiResponse<iUser[]>>(`${this.API_URL}`, { params }).pipe(map(response => response.response));
   }
 
   public update(id: number, req: iUserUpdate): Observable<iUserProfileResponse> {
