@@ -1,3 +1,4 @@
+import { NavigationUtils } from '@/shared/utils/navigation';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
@@ -14,32 +15,37 @@ const MODULES = [MenubarModule, RouterModule, CommonModule];
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   encapsulation: ViewEncapsulation.None,
+  providers: [NavigationUtils],
 })
 export class MenuComponent implements OnInit {
   items: MenuItem[] | undefined;
 
   router = inject(Router);
 
-  constructor() {}
+  private readonly navigationUtils = inject(NavigationUtils);
 
   ngOnInit() {
     this.items = [
       {
-        icon: 'pi pi-home',
-        route: '/home',
+        label: 'Home',
+        command: () => this.navigationUtils.goHome(),
       },
       {
-        icon: 'pi pi-user',
+        label: 'Usuário',
         items: [
           {
             label: 'Cadastro',
-            route: '/sign-up',
+            command: () => this.navigationUtils.navigateTo('/sign-up'),
           },
           {
             label: 'Login',
-            route: '/login',
+            command: () => this.navigationUtils.navigateTo('/login'),
           },
         ],
+      },
+      {
+        label: 'Sobre',
+        command: () => this.navigationUtils.navigateTo('/about'),
       },
     ];
   }

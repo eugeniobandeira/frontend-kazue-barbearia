@@ -1,10 +1,11 @@
 import { BarbershopService } from '@/domain/barbershop/services/barbershop.service';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 
-const MODULES = [ButtonModule, CommonModule, TagModule];
+const MODULES = [ButtonModule, CommonModule, TagModule, RouterModule];
 
 @Component({
   selector: 'app-hero',
@@ -15,6 +16,7 @@ const MODULES = [ButtonModule, CommonModule, TagModule];
   standalone: true,
 })
 export class HeroComponent implements OnInit {
+  private readonly router = inject(Router);
   private readonly barbershopService = inject(BarbershopService);
 
   private readonly barbershopId = 1;
@@ -35,5 +37,9 @@ export class HeroComponent implements OnInit {
         console.error('Erro ao carregar status da barbearia:', err);
       },
     });
+  }
+
+  navigateToQueue() {
+    this.router.navigate(['/queue']);
   }
 }
