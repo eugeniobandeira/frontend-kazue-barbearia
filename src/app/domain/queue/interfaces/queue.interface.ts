@@ -20,6 +20,14 @@ export interface iQueueRequest {
   amount: number;
 }
 
+export interface iQueueUpdateRequest {
+  idStatus: number;
+  idCustomer: string;
+  idBarber: string;
+  idServices: string[];
+  amount: number;
+}
+
 export interface iQueueGet {
   idCustomer?: string;
   idBarber?: string;

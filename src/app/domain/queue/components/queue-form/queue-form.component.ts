@@ -1,10 +1,9 @@
 import { LoadingService } from '@/domain/auth/services/loading.service';
 import { SnackBarService } from '@/shared/services/snackbar.service';
-import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { delay, finalize } from 'rxjs';
 import { createQueueFormControl } from '../../constants/queue-form';
-import { iQueueResponse, iQueueRequest } from '../../interfaces/queue.interface';
 import { QueueApi } from '../../apis/queue.api';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -17,8 +16,21 @@ import { ServiceApi } from '@/domain/service/apis/service.api';
 import { Router, RouterModule } from '@angular/router';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { BarbershopService } from '@/domain/barbershop/services/barbershop.service';
+import { CommonModule } from '@angular/common';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
-const MODULES = [FormsModule, ReactiveFormsModule, DropdownModule, MultiSelectModule, InputTextModule, ButtonModule, RouterModule, InputNumberModule];
+const MODULES = [
+  FormsModule,
+  ReactiveFormsModule,
+  DropdownModule,
+  MultiSelectModule,
+  InputTextModule,
+  ButtonModule,
+  RouterModule,
+  InputNumberModule,
+  CommonModule,
+  ProgressSpinnerModule,
+];
 
 @Component({
   selector: 'app-queue-form',
@@ -40,50 +52,79 @@ export class QueueFormComponent implements OnInit {
   private readonly _barbershopService = inject(BarbershopService);
 
   @Output() onSave = new EventEmitter<void>();
-  @Input() queueToEdit?: iQueueResponse | null;
 
   user = this._authService.getUser();
-  validationCode: string = '';
-  lista: any = [];
 
   public barberList = signal<any[]>([]);
   public serviceList = signal<any[]>([]);
   public loadingBarbers = signal(false);
   public loadingServices = signal(false);
   public barbershopInfo = this._barbershopService.barbershopInfo;
+  public showPinError = signal(false);
+  public isShopClosed = signal(false);
+  public isLoadingData = signal(true);
 
   public readonly queueForm = createQueueFormControl();
 
   ngOnInit() {
-    this._barbershopService.loadBarbershopData(1).subscribe();
+    this.loadBarbershopData();
+    this.setupFormListeners();
+    this.loadInitialData();
+  }
 
-    this.queueForm.get('idServices')?.valueChanges.subscribe(services => {
-      if (Array.isArray(services)) {
-        const selectedIds = services.map(id => id.toString());
+  private loadBarbershopData(): void {
+    this._barbershopService.loadBarbershopData(1).subscribe({
+      next: () => {
+        this.isShopClosed.set(!this.barbershopInfo().isOpen);
+        if (this.isShopClosed()) {
+          this.queueForm.disable();
+        }
+        this.isLoadingData.set(false);
+      },
+      error: () => {
+        this.isLoadingData.set(false);
+        this._snackBarService.showSnackBar('Erro ao carregar dados da barbearia', 3000, 'center', 'bottom');
+      },
+    });
+  }
 
-        const total = this.serviceList()
-          .filter(service => selectedIds.includes(service.id.toString()))
-          .reduce((sum, service) => sum + service.price, 0);
-
-        this.queueForm.get('amount')?.setValue(total, { emitEvent: false });
-      } else {
-        this.queueForm.get('amount')?.setValue(0, { emitEvent: false });
-      }
+  private setupFormListeners(): void {
+    this.queueForm.get('validationCode')?.valueChanges.subscribe(() => {
+      this.checkPinValidity();
     });
 
-    this.loadInitialData();
+    this.queueForm.get('idServices')?.valueChanges.subscribe(services => {
+      const total = Array.isArray(services) ? this.calculateTotal(services) : 0;
+      this.queueForm.get('amount')?.setValue(total, { emitEvent: false });
+    });
+  }
+
+  private calculateTotal(services: any[]): number {
+    const selectedIds = services.map(id => id.toString());
+    return this.serviceList()
+      .filter(service => selectedIds.includes(service.id.toString()))
+      .reduce((sum, service) => sum + service.price, 0);
+  }
+
+  private checkPinValidity(): void {
+    const pin = this.queueForm.getRawValue().validationCode;
+    const code = this.barbershopInfo().accessCode;
+    this.showPinError.set(pin !== '' && pin !== code);
   }
 
   isOk(): boolean {
     const code = this.barbershopInfo().accessCode;
     const status = this.barbershopInfo().isOpen;
-
     const pin = this.queueForm.getRawValue().validationCode;
-
     return code === pin && status === true;
   }
 
-  onLoadBarbers(): void {
+  private loadInitialData() {
+    this.loadBarbers();
+    this.loadServices();
+  }
+
+  private loadBarbers(): void {
     this.loadingBarbers.set(true);
     this._userApi
       .getBarberList()
@@ -92,16 +133,12 @@ export class QueueFormComponent implements OnInit {
         finalize(() => this.loadingBarbers.set(false))
       )
       .subscribe({
-        next: barbers => {
-          this.barberList.set(barbers);
-        },
-        error: error => {
-          this._snackBarService.showSnackBar(error?.error?.message ?? 'Erro ao carregar barbeiros.', 3000, 'end', 'top');
-        },
+        next: barbers => this.barberList.set(barbers),
+        error: error => this.showError('Erro ao carregar barbeiros', error),
       });
   }
 
-  onLoadServices(): void {
+  private loadServices(): void {
     this.loadingServices.set(true);
     this._serviceApi
       .get()
@@ -110,54 +147,48 @@ export class QueueFormComponent implements OnInit {
         finalize(() => this.loadingServices.set(false))
       )
       .subscribe({
-        next: response => {
-          this.serviceList.set(response.response || []);
-        },
-        error: error => {
-          this._snackBarService.showSnackBar(error?.error?.message ?? 'Erro ao carregar serviços.', 3000, 'end', 'top');
-        },
+        next: response => this.serviceList.set(response.response || []),
+        error: error => this.showError('Erro ao carregar serviços', error),
       });
   }
 
-  private loadInitialData() {
-    this.onLoadBarbers();
-    this.onLoadServices();
+  private showError(defaultMessage: string, error: any): void {
+    this._snackBarService.showSnackBar(error?.error?.message ?? defaultMessage, 3000, 'center', 'bottom');
   }
 
   onSubmit(): void {
-    this._isLoading.start();
+    if (this.queueForm.invalid) return;
 
+    this._isLoading.start();
     const { idBarber, amount, idServices } = this.queueForm.getRawValue();
 
-    const req: iQueueRequest = {
-      idCustomer: this.user?.id.toString() ?? '',
-      idBarber,
-      amount,
-      idServices: idServices.map((id: number | string) => id.toString()),
-    };
-
     this._queueApi
-      .create(req)
+      .create({
+        idCustomer: this.user?.id.toString() ?? '',
+        idBarber,
+        amount,
+        idServices: idServices.map((id: number | string) => id.toString()),
+      })
       .pipe(
         delay(4000),
         finalize(() => this._isLoading.stop()),
         takeUntilDestroyed(this._destroy$)
       )
       .subscribe({
-        next: data => {
-          this.lista = [data];
-        },
-        error: error => {
-          this._snackBarService.showSnackBar(error?.error?.message, 3000, 'end', 'top');
-          console.error('Error:', error);
-        },
-        complete: () => {
-          const message = 'Você foi adicionado na fila com sucesso.';
-          this._snackBarService.showSnackBar(message, 3000, 'end', 'top');
-          this.queueForm.reset();
-          this.onSave.emit();
-          this.router.navigate(['/home']);
-        },
+        next: () => this.handleSuccess(),
+        error: error => this.handleError(error),
       });
+  }
+
+  private handleSuccess(): void {
+    this._snackBarService.showSnackBar('Você foi adicionado na fila com sucesso.', 3000, 'center', 'bottom');
+    this.queueForm.reset();
+    this.onSave.emit();
+    this.router.navigate(['/home']);
+  }
+
+  private handleError(error: any): void {
+    this._snackBarService.showSnackBar(error?.error?.message ?? 'Erro ao processar solicitação', 3000, 'center', 'bottom');
+    console.error('Error:', error);
   }
 }

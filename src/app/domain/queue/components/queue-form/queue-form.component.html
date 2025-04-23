@@ -1,6 +1,20 @@
 <div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-  <h2 class="text-2xl font-bold text-gray-800 mb-6">Entrar na Fila</h2>
+  @if (isLoadingData()) {
+  <div class="absolute inset-0 bg-white bg-opacity-90 z-10 flex items-center justify-center">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+  } @if (!isLoadingData() && isShopClosed()) {
+  <div class="inset-0 bg-white bg-opacity-90 z-10 flex flex-col items-center justify-center p-6">
+    <div class="text-center max-w-xs">
+      <div class="mb-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 rounded">
+        <p class="font-bold text-lg">Barbearia Fechada</p>
+        <p>No momento não estamos atendendo. Por favor, volte mais tarde.</p>
+      </div>
+    </div>
+  </div>
+  }
 
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Entrar na Fila</h2>
   <form [formGroup]="queueForm" (ngSubmit)="onSubmit()" class="space-y-4">
     <div class="space-y-2">
       <label for="idBarber" class="block text-sm font-medium text-gray-700">Barbeiro</label>
@@ -37,7 +51,19 @@
 
     <div class="flex-auto">
       <label for="validationCode">Código de validação</label>
-      <input type="text" id="validationCode" pInputText formControlName="validationCode" maxlength="4" class="w-full p-2 border rounded-md" />
+      <input
+        type="text"
+        id="validationCode"
+        pInputText
+        formControlName="validationCode"
+        maxlength="4"
+        class="w-full p-2 border rounded-md"
+        [ngClass]="{'border-red-500': showPinError()}"
+      />
+
+      @if (showPinError()) {
+      <div class="mt-1 text-sm text-red-600">O código de validação está incorreto. Por favor, verifique e tente novamente.</div>
+      }
     </div>
 
     <div class="pt-4">
@@ -47,7 +73,7 @@
         label="Entrar na Fila"
         class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md"
         severity="contrast"
-        [disabled]="queueForm.invalid || !isOk()"
+        [disabled]="queueForm.invalid || !isOk() || isShopClosed()"
       ></button>
     </div>
   </form>
