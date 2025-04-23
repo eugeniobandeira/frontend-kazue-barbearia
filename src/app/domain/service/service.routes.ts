@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 
-export const routes: Routes = [
+export const serviceRoutes: Routes = [
   {
-    path: 'service',
-    loadChildren: () => import('./pages/service-view/service-view.component').then(c => c.ServiceViewComponent),
+    path: 'services',
+    loadComponent: () => import('./pages/service-view/service-view.component').then(c => c.ServiceViewComponent),
   },
 ];
