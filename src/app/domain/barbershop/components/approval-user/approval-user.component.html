@@ -1,0 +1,58 @@
+<div class="flex items-center justify-center">
+  <div class="w-[380px] md:w-[700px] lg:w-[1000px] p-5">
+    <p-toast></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+
+    <p-table [value]="userList()" [paginator]="true" [rows]="pageSize()" [totalRecords]="totalRecords()" [loading]="loading()" (onPage)="onPageChange($event)">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Telefone</th>
+          <th>Data de Nascimento</th>
+          <th>Data de Registro</th>
+          <th>Status</th>
+          <th class="text-center">Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-user>
+        <tr>
+          <td>@if (user.nicknamePreference && user.nickname) { {{ user.nickname }} } @else { {{ user.fullname }} }</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.phone }}</td>
+          <td>{{ user.dateOfBirth | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ user.dateOfRegistry | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ user.statusDescription}}</td>
+          <td class="text-center">
+            <div class="flex gap-2 justify-center">
+              <button
+                pButton
+                icon="pi pi-check"
+                class="p-button-rounded p-button-sm p-button-success"
+                (click)="editUser(user)"
+                pTooltip="Editar usuário"
+                tooltipPosition="top"
+              ></button>
+
+              <button
+                pButton
+                icon="pi pi-ban"
+                class="p-button-rounded p-button-sm p-button-danger"
+                (click)="confirmDelete(user.id)"
+                pTooltip="Remover usuário"
+                tooltipPosition="top"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center py-4">@if (loading()) { Carregando usuários... } @else { Nenhum usuário encontrado. }</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
