@@ -10,10 +10,24 @@ import { MatSelectModule } from '@angular/material/select';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
+import { QueueManagerComponent } from '../../components/queue-manager/queue-manager.component';
+import { RouterModule } from '@angular/router';
 
-const COMPONENTS = [ManageStatusComponent, ManageStatusFormComponent];
+const COMPONENTS = [ManageStatusComponent, ManageStatusFormComponent, QueueManagerComponent];
 
-const MODULES = [MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, FormsModule, ReactiveFormsModule, ButtonModule, CommonModule, DialogModule, DropdownModule];
+const MODULES = [
+  MatFormFieldModule,
+  MatIconModule,
+  MatInputModule,
+  MatSelectModule,
+  FormsModule,
+  ReactiveFormsModule,
+  ButtonModule,
+  CommonModule,
+  DialogModule,
+  DropdownModule,
+  RouterModule,
+];
 
 @Component({
   selector: 'app-barbershop-view',
