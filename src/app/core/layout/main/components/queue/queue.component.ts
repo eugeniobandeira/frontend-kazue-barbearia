@@ -8,6 +8,9 @@ import { BadgeModule } from 'primeng/badge';
 import { iApiResponse } from '@/shared/interfaces/api-response.interface';
 import { BarbershopService } from '@/domain/barbershop/services/barbershop.service';
 import { TagModule } from 'primeng/tag';
+import { StatusUtils } from '@/shared/utils/status-severirty';
+import { finalize, catchError, EMPTY } from 'rxjs';
+import { MessageService } from 'primeng/api';
 
 const MODULES = [CommonModule, TableModule, BadgeModule, TagModule];
 
@@ -18,30 +21,49 @@ const MODULES = [CommonModule, TableModule, BadgeModule, TagModule];
   styleUrl: './queue.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
+  providers: [MessageService],
 })
 export class QueueComponent implements OnInit {
   private readonly _queueApi = inject(QueueApi);
   private readonly _barbershopService = inject(BarbershopService);
+  private readonly _messageService = inject(MessageService);
 
   public todayQueue = this._queueApi.queueListByDate;
   public barbershopInfo = this._barbershopService.barbershopInfo;
   public dataFormatada = moment().format('YYYY-MM-DD');
-  public queue = signal<iQueueResponse[]>([]);
-
-  public page = 1;
-  public pageSize = 4;
+  public queue = this._queueApi.queueList;
+  public loading = signal(true);
 
   ngOnInit(): void {
-    this.loadQueueByDate(this.dataFormatada);
+    this.loadQueueByDate();
+
+    // setInterval(() => {
+    //   this.loadQueueByDate();
+    // }, 500);
   }
 
-  loadQueueByDate(date: string): void {
-    this._queueApi.getByDate(date).subscribe({
-      next: (apiResponse: iApiResponse<iQueueResponse[]>) => {
-        this.queue.set(apiResponse?.response);
-      },
-      error: err => console.error('Error loading queue:', err),
-    });
+  getSeverity(status: string): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' {
+    return StatusUtils.getStatusSeverity(status);
+  }
+
+  loadQueueByDate(): void {
+    this._queueApi
+      .getByDate(this.dataFormatada)
+      .pipe(
+        finalize(() => this.loading.set(false)),
+        catchError(err => {
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Falha ao carregar dados da fila. Error: ' + err.message,
+          });
+          return EMPTY;
+        })
+      )
+      .subscribe({
+        next: (apiResponse: iApiResponse<iQueueResponse[]>) => {},
+        error: err => console.error('Error loading queue:', err),
+      });
   }
 
   shouldShowQueue(): boolean {
@@ -56,17 +78,5 @@ export class QueueComponent implements OnInit {
 
   rowStyle(item: iQueueResponse) {
     return item.status.description === 'Pendente' ? { fontWeight: 'bold', fontStyle: 'italic' } : {};
-  }
-
-  stockSeverity(item: iQueueResponse): 'success' | 'warning' | 'danger' {
-    switch (item.status.description) {
-      case 'Ok':
-        return 'danger';
-      case 'Teste':
-        return 'warning';
-      case 'Ativo':
-      default:
-        return 'success';
-    }
   }
 }
