@@ -4,6 +4,7 @@ import { environment } from '@environments/environment';
 import { iQueueGet, iQueueRequest, iQueueResponse, iQueueUpdateRequest } from '../interfaces/queue.interface';
 import { Observable, tap } from 'rxjs';
 import { iApiResponse } from '@/shared/interfaces/api-response.interface';
+import { eDomain } from '@/domain/status/enums/domain.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -37,8 +38,14 @@ export class QueueApi {
   public getByDate(date: string): Observable<iApiResponse<iQueueResponse[]>> {
     return this._httpClient.get<iApiResponse<iQueueResponse[]>>(`${this.API_URL}/filter?date=${date}`).pipe(
       tap(response => {
-        this.queueListByDate.set(response.response);
-        this.queueList.set(response.response);
+        let filtered = response.response;
+
+        if (filtered) {
+          filtered = filtered.filter(item => item.status.description !== 'Finalizado');
+        }
+
+        this.queueListByDate.set(filtered);
+        this.queueList.set(filtered);
       })
     );
   }

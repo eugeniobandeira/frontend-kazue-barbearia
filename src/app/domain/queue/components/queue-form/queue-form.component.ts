@@ -184,7 +184,7 @@ export class QueueFormComponent implements OnInit {
     this._snackBarService.showSnackBar('Você foi adicionado na fila com sucesso.', 3000, 'center', 'bottom');
     this.queueForm.reset();
     this.onSave.emit();
-    this.router.navigate(['/home']);
+    this.router.navigate(['/']);
   }
 
   private handleError(error: any): void {

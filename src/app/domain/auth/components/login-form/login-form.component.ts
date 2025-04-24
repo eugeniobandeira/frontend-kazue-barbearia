@@ -15,6 +15,8 @@ import { PasswordModule } from 'primeng/password';
 import { LoadingService } from '../../services/loading.service';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '@/core/services/auth.service';
+import { MessageService } from 'primeng/api';
+import { NavigationUtils } from '@/shared/utils/navigation';
 
 const MODULES = [
   CommonModule,
@@ -37,12 +39,15 @@ const MODULES = [
   styleUrl: './login-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
+  providers: [MessageService, NavigationUtils],
 })
 export class LoginFormComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly _authService = inject(AuthService);
   private readonly _snackBarService = inject(SnackBarService);
   public readonly _isLoading = inject(LoadingService);
+  private readonly _messageService = inject(MessageService);
+  private readonly _navigationUtils = inject(NavigationUtils);
 
   visible = false;
 
@@ -63,22 +68,34 @@ export class LoginFormComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.invalid) return;
+
     this._isLoading.start();
-
-    const { email, password } = this.loginForm.getRawValue();
-
-    const req: iLogin = { email, password };
+    const { username, password } = this.loginForm.getRawValue();
+    const req: iLogin = { username, password };
 
     this._authService
       .login(req)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: user => {
-          this._snackBarService.showSnackBar('Login efetuado com sucesso', 3000, 'center', 'bottom');
           this._isLoading.stop();
+          this._messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'Login efetuado com sucesso!',
+            life: 3000,
+          });
+
+          this._navigationUtils.goHome();
         },
         error: err => {
-          this._snackBarService.showSnackBar('Credenciais inválidas', 3000, 'center', 'bottom');
+          this._isLoading.stop();
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Credenciais inválidas',
+            life: 3000,
+          });
           console.error('Erro no login:', err);
         },
       });

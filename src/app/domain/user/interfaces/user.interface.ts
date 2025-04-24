@@ -6,7 +6,7 @@ export interface iUser {
   fullname: string;
   nickname: string;
   nicknamePreference?: boolean | number;
-  email: string;
+  username: string;
   phone: string;
   role: eRoles;
   dateOfBirth: Date;
@@ -21,7 +21,7 @@ export interface iUserProfileResponse {
   fullname: string;
   nickname?: string;
   nicknamePreference?: string;
-  email: string;
+  username: string;
   phone: string;
 }
 
@@ -36,20 +36,23 @@ export interface iUserRegisteredResponse {
   id: string;
   fullname: string;
   token: string;
+  role: string;
+  status: string;
 }
 
 export interface iUserUpdate {
   fullname: string;
   nickname?: string;
   nicknamePreference?: boolean | number;
-  email: string;
+  username: string;
   phone: string;
 }
 
 export interface iUserGet {
+  idStatus?: number;
   fullname?: string;
   nickname?: string;
-  email?: string;
+  username?: string;
   phone?: string;
   page: number;
   pageSize: number;
@@ -59,9 +62,9 @@ export interface iUserCreateRequest {
   fullname: string;
   nicknamePreference: boolean;
   nickname: string | null;
-  email: string;
+  username: string;
   phone: string;
   password: string;
   role: eRoles;
-  dateOfBirth: Date | null;
+  dateOfBirth: string | null;
 }

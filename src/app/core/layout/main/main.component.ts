@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { FooterComponent } from '../footer/footer.component';
-import { HeaderComponent } from '../header/header.component';
 import { RouterModule } from '@angular/router';
 import { MenuComponent } from '../menu/menu.component';
 import { HeroComponent } from './components/hero/hero.component';
 
-const COMPONENTS = [HeaderComponent, FooterComponent, MenuComponent, HeroComponent];
+const COMPONENTS = [FooterComponent, MenuComponent, HeroComponent];
 const MODULES = [RouterModule];
 
 @Component({

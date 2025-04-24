@@ -56,14 +56,14 @@ export class ServiceFormComponent implements OnChanges {
     const req: iServicePayload = {
       code,
       description,
-      price,
+      price: parseFloat(Number(price).toFixed(2)),
     };
 
     const request$ = this.serviceToEdit ? this._serviceApi.update(this.serviceToEdit.id, req) : this._serviceApi.create(req);
 
     request$
       .pipe(
-        delay(4000),
+        delay(500),
         finalize(() => this._isLoading.stop()),
         takeUntilDestroyed(this._destroy$)
       )

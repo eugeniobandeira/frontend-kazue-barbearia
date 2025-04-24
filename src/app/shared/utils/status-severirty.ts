@@ -5,6 +5,10 @@ export class StatusUtils {
         return 'warn';
       case 'FINALIZADO':
         return 'success';
+      case 'APROVADO':
+        return 'success';
+      case 'REJEITADO':
+        return 'danger';
       default:
         return 'info';
     }

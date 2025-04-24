@@ -6,7 +6,7 @@ type UserFormControl = {
   fullname: FormControl<string>;
   nicknamePreference: FormControl<boolean>;
   nickname: FormControl<string | null>;
-  email: FormControl<string>;
+  username: FormControl<string>;
   phone: FormControl<string>;
   password: FormControl<string>;
   role: FormControl<eRoles>;
@@ -28,8 +28,8 @@ export function createUserSignUpFormControl(): FormGroup<UserFormControl> {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    email: new FormControl('', {
-      validators: [Validators.required, Validators.email],
+    username: new FormControl('', {
+      validators: [Validators.required],
       nonNullable: true,
     }),
     phone: new FormControl('', {

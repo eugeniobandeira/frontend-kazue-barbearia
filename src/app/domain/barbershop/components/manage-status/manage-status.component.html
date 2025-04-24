@@ -1,16 +1,7 @@
-<div class="status-container p-card p-p-3 p-mb-3">
+<div class="status-container p-card p-p-3 p-mb-3 w-[360px] md:w-[780px] lg:w-[980px]">
   @if (isLoading()) {
   <div class="loading">Carregando...</div>
   } @else {
-  <!-- <div class="p-grid">
-    <h1>Painel Administrativo</h1>
-    <p>Gerencie o status da barberia e da fila.</p>
-    <div class="p-col-6 status-item"><strong>PIN Atual:</strong> {{ barbershopInfo().accessCode }}</div>
-    <div class="p-col-6 status-item">
-      <strong>Status:</strong>
-      <span> {{ barbershopInfo().isOpen ? 'Aberto' : 'Fechado' }} </span>
-    </div>
-  </div> -->
   <div class="admin-panel p-4">
     <h1 class="text-xl font-semibold mb-2">Painel Administrativo</h1>
     <p class="mb-4 text-lg text-gray-600">Gerencie o status da barbearia e da fila de atendimento.</p>

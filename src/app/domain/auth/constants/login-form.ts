@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 
 type LoginFormControl = {
-  email: FormControl<string>;
+  username: FormControl<string>;
   password: FormControl<string>;
 };
 
@@ -10,8 +10,8 @@ export function createLoginFormControl(): FormGroup<LoginFormControl> {
   const fb = inject(NonNullableFormBuilder);
 
   return fb.group({
-    email: new FormControl('', {
-      validators: [Validators.required, Validators.email],
+    username: new FormControl('', {
+      validators: [Validators.required],
       nonNullable: true,
     }),
     password: new FormControl('', {

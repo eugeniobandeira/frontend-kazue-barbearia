@@ -37,9 +37,9 @@ export class QueueComponent implements OnInit {
   ngOnInit(): void {
     this.loadQueueByDate();
 
-    // setInterval(() => {
-    //   this.loadQueueByDate();
-    // }, 500);
+    setInterval(() => {
+      this.loadQueueByDate();
+    }, 300000);
   }
 
   getSeverity(status: string): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' {

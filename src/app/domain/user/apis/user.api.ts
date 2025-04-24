@@ -37,19 +37,24 @@ export class UserApi {
     return this._httpClient.get<iUserShortResponse[]>(this.API_URL, { params });
   }
 
-  public getAllUsers(req: iUserGet): Observable<iUser[]> {
+  public getAllUsers(req: iUserGet): Observable<iApiResponse<iUser[]>> {
     let params = new HttpParams().set('page', req.page.toString()).set('pageSize', req.pageSize.toString());
 
+    if (req.idStatus) params = params.set('idStatus', req.idStatus);
     if (req.fullname) params = params.set('fullname', req.fullname);
     if (req.nickname) params = params.set('nickname', req.nickname);
-    if (req.email) params = params.set('email', req.email);
+    if (req.username) params = params.set('username', req.username);
     if (req.phone) params = params.set('phone', req.phone);
 
-    return this._httpClient.get<iApiResponse<iUser[]>>(`${this.API_URL}`, { params }).pipe(map(response => response.response));
+    return this._httpClient.get<iApiResponse<iUser[]>>(`${this.API_URL}`, { params }).pipe(map(response => response));
   }
 
-  public update(id: number, req: iUserUpdate): Observable<iUserProfileResponse> {
+  public update(id: string, req: iUserUpdate): Observable<iUserProfileResponse> {
     return this._httpClient.put<iUserProfileResponse>(`${this.API_URL}/${id}`, req);
+  }
+
+  public updateStatus(id: string, idStatus: number): Observable<iUserShortResponse> {
+    return this._httpClient.put<iUserShortResponse>(`${this.API_URL}/${id}/status`, idStatus);
   }
 
   public delete(id: number): Observable<void> {

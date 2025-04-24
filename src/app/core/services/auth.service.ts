@@ -58,11 +58,11 @@ export class AuthService {
   private handleLoginSuccess(response: iUserRegisteredResponse): void {
     this.userSig.set(response);
     this.router.navigate(['/queue']);
-    this.notification.showSuccess('AUTH.SUCCESS.LOGIN');
+    // this.notification.showSuccess('AUTH.SUCCESS.LOGIN');
   }
 
   private handleAuthError(error: any): Observable<never> {
-    this.notification.showError('AUTH.ERRORS.LOGIN_FAILED');
+    // this.notification.showError('AUTH.ERRORS.LOGIN_FAILED');
     this.clearAuthState();
     return throwError(() => error);
   }
@@ -77,7 +77,7 @@ export class AuthService {
     this.storage.remove('auth');
   }
 
-  private isTokenValid(token: string): boolean {
+  public isTokenValid(token: string): boolean {
     try {
       const { exp } = jwtDecode<{ exp: number }>(token);
       return Date.now() < exp * 1000;

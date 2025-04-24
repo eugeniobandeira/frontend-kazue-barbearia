@@ -1,3 +1,4 @@
+import { AuthService } from '@/core/services/auth.service';
 import { NavigationUtils } from '@/shared/utils/navigation';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
@@ -23,14 +24,19 @@ export class MenuComponent implements OnInit {
   router = inject(Router);
 
   private readonly navigationUtils = inject(NavigationUtils);
+  private readonly authService = inject(AuthService);
 
   ngOnInit() {
+    const user = this.authService.getUser();
+    const role = user?.role;
+
     this.items = [
       {
         label: 'Home',
         command: () => this.navigationUtils.goHome(),
       },
       {
+        icon: 'pi pi-angle-down',
         label: 'Usuário',
         items: [
           {
@@ -41,12 +47,27 @@ export class MenuComponent implements OnInit {
             label: 'Login',
             command: () => this.navigationUtils.navigateTo('/login'),
           },
+          {
+            label: 'Sair',
+            command: () => this.authService.logout(),
+          },
         ],
+      },
+      {
+        label: 'Fila',
+        command: () => this.navigationUtils.navigateTo('/queue'),
       },
       {
         label: 'Sobre',
         command: () => this.navigationUtils.navigateTo('/about'),
       },
     ];
+
+    if (role === 'admin') {
+      this.items.push({
+        label: 'Admin',
+        command: () => this.navigationUtils.navigateTo('/barbershop'),
+      });
+    }
   }
 }

@@ -62,24 +62,14 @@
           <label for="dateOfBirth" class="block text-sm font-medium text-gray-700">Data de Nascimento</label>
           <div class="relative flex items-center w-full">
             <i class="pi pi-calendar absolute left-3 text-gray-500"></i>
-            <input
-              type="date"
-              name="dateOfBirth"
+            <p-inputMask
+              mask="99/99/9999"
+              placeholder="dd/mm/aaaa"
               id="dateOfBirth"
               formControlName="dateOfBirth"
               class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               [ngClass]="{'border-red-500 ring-red-500': signupForm.get('dateOfBirth')?.invalid && (signupForm.get('dateOfBirth')?.dirty || signupForm.get('dateOfBirth')?.touched)}"
             />
-            <!-- <p-calendar
-              id="dateOfBirth"
-              formControlName="dateOfBirth"
-              [showIcon]="false"
-              [monthNavigator]="true"
-              [yearNavigator]="true"
-              placeholder="Sua data de nascimento"
-              class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              [ngClass]="{'border-red-500 ring-red-500': signupForm.get('dateOfBirth')?.invalid && (signupForm.get('dateOfBirth')?.dirty || signupForm.get('dateOfBirth')?.touched)}"
-            ></p-calendar> -->
           </div>
           <small *ngIf="signupForm.get('dateOfBirth')?.invalid && (signupForm.get('dateOfBirth')?.dirty || signupForm.get('dateOfBirth')?.touched)" class="text-red-600 text-xs">
             Data de nascimento é obrigatória
@@ -87,21 +77,21 @@
         </div>
 
         <div class="space-y-1">
-          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <label for="username" class="block text-sm font-medium text-gray-700">Usuário</label>
           <div class="relative flex items-center">
             <i class="pi pi-envelope absolute left-3 text-gray-500"></i>
             <input
               pInputText
-              id="email"
-              type="email"
-              formControlName="email"
-              placeholder="seu@email.com"
+              id="username"
+              type="username"
+              formControlName="username"
+              placeholder="usuario123"
               class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              [ngClass]="{'border-red-500 ring-red-500': signupForm.get('email')?.invalid && (signupForm.get('email')?.dirty || signupForm.get('email')?.touched)}"
+              [ngClass]="{'border-red-500 ring-red-500': signupForm.get('username')?.invalid && (signupForm.get('username')?.dirty || signupForm.get('username')?.touched)}"
             />
           </div>
-          <small *ngIf="signupForm.get('email')?.invalid && (signupForm.get('email')?.dirty || signupForm.get('email')?.touched)" class="text-red-600 text-xs">
-            {{ signupForm.get('email')?.errors?.['required'] ? 'Email é obrigatório' : 'Email inválido' }}
+          <small *ngIf="signupForm.get('username')?.invalid && (signupForm.get('username')?.dirty || signupForm.get('username')?.touched)" class="text-red-600 text-xs">
+            {{ signupForm.get('username')?.errors?.['required'] ? 'Usuário é obrigatório' : 'Usuário inválido' }}
           </small>
         </div>
 
@@ -132,7 +122,7 @@
               id="password"
               formControlName="password"
               [toggleMask]="true"
-              [feedback]="true"
+              [feedback]="false"
               placeholder="Crie uma senha segura"
               class="w-full"
               [ngClass]="{'border-red-500 ring-red-500': signupForm.get('password')?.invalid && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)}"

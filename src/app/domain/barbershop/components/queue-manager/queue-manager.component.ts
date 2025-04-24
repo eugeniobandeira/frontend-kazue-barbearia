@@ -217,7 +217,6 @@ export class QueueManagerComponent implements OnInit {
   }
 
   confirmDelete(queueId: number): void {
-    console.log('queueId: ', queueId);
     this._confirmationService.confirm({
       message: 'Tem certeza que deseja excluir este atendimento?',
       header: 'Confirmação',

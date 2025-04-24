@@ -1,6 +1,7 @@
 import { iQueueResponse } from '@/domain/queue/interfaces/queue.interface';
 import { ServiceApi } from '@/domain/service/apis/service.api';
 import { StatusApi } from '@/domain/status/apis/status.api';
+import { eDomain } from '@/domain/status/enums/domain.enum';
 import { UserApi } from '@/domain/user/apis/user.api';
 import { iUser } from '@/domain/user/interfaces/user.interface';
 import { iApiResponse } from '@/shared/interfaces/api-response.interface';
@@ -14,12 +15,14 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { finalize, catchError, EMPTY } from 'rxjs';
+import { StatusUtils } from '@/shared/utils/status-severirty';
 
 const MODULES = [
   CommonModule,
@@ -35,6 +38,7 @@ const MODULES = [
   DropdownModule,
   SelectModule,
   MultiSelectModule,
+  ProgressSpinnerModule,
 ];
 
 @Component({
@@ -63,17 +67,45 @@ export class ApprovalUserComponent implements OnInit {
   public pageSize = signal(10);
   public userList = signal<iUser[]>([]);
   public totalRecords = signal(0);
+  public statusList = signal<any[]>([]);
+
+  public filters = signal<{
+    idStatus?: number;
+    fullname?: string;
+    nickname?: string;
+    username?: string;
+    phone?: string;
+  }>({
+    idStatus: undefined,
+    fullname: '',
+    nickname: '',
+    username: '',
+    phone: '',
+  });
+
+  getSeverity(status: string): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' {
+    return StatusUtils.getStatusSeverity(status);
+  }
 
   ngOnInit(): void {
     this.onLoadUsers();
+    this.loadStatus();
   }
 
-  onLoadUsers() {
+  onLoadUsers(): void {
     this.loading.set(true);
+
+    const { idStatus, fullname, nickname, username, phone } = this.filters();
+
     this._userApi
       .getAllUsers({
         page: this.currentPage(),
         pageSize: this.pageSize(),
+        idStatus,
+        fullname,
+        nickname,
+        username,
+        phone,
       })
       .pipe(
         finalize(() => this.loading.set(false)),
@@ -87,40 +119,97 @@ export class ApprovalUserComponent implements OnInit {
           return EMPTY;
         })
       )
-      .subscribe(users => {
-        this.userList.set(users);
-        // Atualize totalRecords se sua API retornar o total
-        // this.totalRecords.set(response.total);
+      .subscribe({
+        next: (response: iApiResponse<iUser[]>) => {
+          this.userList.set(response.response);
+          this.totalRecords.set(response.resultCount);
+        },
+        error: () => {
+          this.userList.set([]);
+          this.totalRecords.set(0);
+        },
       });
   }
 
-  onPageChange(event: any) {
-    this.currentPage.set(event.page + 1);
-    this.pageSize.set(event.rows);
+  onClearFilters(): void {
+    this.filters.set({
+      idStatus: undefined,
+      fullname: '',
+      nickname: '',
+      username: '',
+      phone: '',
+    });
+    this.currentPage.set(1);
     this.onLoadUsers();
   }
 
-  getSeverity(status: string): string {
-    // Implemente sua lógica de severidade aqui
-    switch (status?.toLowerCase()) {
-      case 'ativo':
-        return 'success';
-      case 'inativo':
-        return 'danger';
-      case 'pendente':
-        return 'warning';
-      default:
-        return 'info';
-    }
+  onPageChange(event: any): void {
+    const pageSize = +event.rows || 10;
+    const pageNumber = +event.page || 0;
+
+    this.pageSize.set(pageSize);
+    this.currentPage.set(pageNumber + 1);
+    this.onLoadUsers();
   }
 
-  editUser(user: iUser) {
-    // Implemente a lógica de edição
-    console.log('Editar usuário:', user);
+  onApprove(user: iUser) {
+    this._userApi
+      .updateStatus(user.id, 2)
+      .pipe(
+        finalize(() => this.loading.set(false)),
+        catchError(error => {
+          console.error('Erro ao aprovar usuários:', error);
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Falha ao aprovar usuário',
+          });
+          return EMPTY;
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.onLoadUsers();
+        },
+        error: err => {
+          console.error('erro: ', err);
+        },
+      });
   }
 
-  confirmDelete(userId: string) {
-    // Implemente a confirmação de exclusão
-    console.log('Excluir usuário:', userId);
+  onReject(user: iUser) {
+    this._userApi
+      .updateStatus(user.id, 3)
+      .pipe(
+        finalize(() => this.loading.set(false)),
+        catchError(error => {
+          console.error('Erro ao reprovar usuário:', error);
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Falha ao reprovar usuários',
+          });
+          return EMPTY;
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.onLoadUsers();
+        },
+        error: err => {
+          console.error('erro: ', err);
+        },
+      });
+  }
+
+  loadStatus(): void {
+    this.loadingStatus.set(true);
+    this._statusApi
+      .loadAll()
+      .pipe(finalize(() => this.loadingStatus.set(false)))
+      .subscribe({
+        next: response => this.statusList.set(response.response.filter(domain => domain.domain === eDomain.USUARIO) || []),
+        error: err => console.error('Error loading status:', err),
+      });
   }
 }

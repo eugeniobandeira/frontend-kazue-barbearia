@@ -10,10 +10,10 @@
     </mat-form-field>
     <mat-form-field>
       <mat-label for="price" data-testid="price">Preço</mat-label>
-      <input formControlName="price" matInput placeholder="preço" type="number" />
+      <input formControlName="price" matInput placeholder="preço" type="number" step="0.50" />
     </mat-form-field>
   </div>
-  <div class="w-full">
+  <div class="col-1">
     <p-button class="w-full" label="Salvar" [disabled]="serviceForm.invalid" (onClick)="onSubmit()" />
   </div>
 </form>

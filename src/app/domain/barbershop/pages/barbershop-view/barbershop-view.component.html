@@ -1,12 +1,12 @@
-<div class="barbershop-view-container">
+<div class="w-[360px] md:w-[780px] lg:w-[980px] p-4 mx-auto">
   <router-outlet></router-outlet>
   <app-manage-status></app-manage-status>
 
   <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
     <p-button label="Atualizar Status Barbearia" icon="pi pi-refresh" (click)="showDialog()" class="status-button p-button-outlined" severity="contrast"> </p-button>
     <p-button label="Fila de Aprovação" icon="pi pi-user" class="status-button p-button-outlined" severity="contrast" [routerLink]="['/approval']"> </p-button>
+    <p-button label="Serviços" icon="pi pi-money-bill" class="status-button p-button-outlined" severity="contrast" [routerLink]="['/services']"> </p-button>
     <p-button label="Status" icon="pi pi-bell" class="status-button p-button-outlined" severity="contrast" [routerLink]="['/status']"> </p-button>
-    <p-button label="Serviços" icon="pi pi-money" class="status-button p-button-outlined" severity="contrast" [routerLink]="['/services']"> </p-button>
   </div>
 
   <p-dialog header="Atualizar Status" [(visible)]="displayDialog" [style]="{width: '360px'}" [modal]="true" [dismissableMask]="true" [closable]="true">
