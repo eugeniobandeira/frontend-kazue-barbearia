@@ -17,19 +17,30 @@ export const errorInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn)
 
       switch (error.status) {
         case 0:
-          notificationService.showError('ERRORS.NETWORK');
+          notificationService.showError('Erro de conexão.');
           break;
         case 401:
           authService.logout();
           router.navigate(['/login'], {
-            state: { error: 'ERRORS.SESSION_EXPIRED' },
+            state: { error: 'Sessão expirada, faça login novamente' },
           });
           break;
         case 403:
           router.navigate(['/error/403'], { replaceUrl: true });
           break;
+
         default:
-          const message = error.error?.message ?? 'ERRORS.GENERIC';
+          let message = 'Erro.';
+          const err = error.error;
+
+          if (Array.isArray(err?.errorMessage)) {
+            message = err.errorMessage.join(', ');
+          } else if (typeof err?.errorMessage === 'string') {
+            message = err.errorMessage;
+          } else if (err?.message) {
+            message = err.message;
+          }
+
           notificationService.showError(message);
       }
       return throwError(() => error);

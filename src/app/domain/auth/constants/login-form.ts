@@ -11,7 +11,7 @@ export function createLoginFormControl(): FormGroup<LoginFormControl> {
 
   return fb.group({
     username: new FormControl('', {
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.pattern(/^\S*$/)],
       nonNullable: true,
     }),
     password: new FormControl('', {

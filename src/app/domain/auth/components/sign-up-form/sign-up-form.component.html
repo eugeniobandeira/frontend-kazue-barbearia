@@ -81,6 +81,7 @@
           <div class="relative flex items-center">
             <i class="pi pi-envelope absolute left-3 text-gray-500"></i>
             <input
+              (keydown.space)="$event.preventDefault()"
               pInputText
               id="username"
               type="username"

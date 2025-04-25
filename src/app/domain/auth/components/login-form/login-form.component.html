@@ -22,6 +22,7 @@
           <div class="relative">
             <i class="pi pi-envelope absolute top-3 left-3 text-gray-400"></i>
             <input
+              (keydown.space)="$event.preventDefault()"
               pInputText
               id="username"
               type="username"
