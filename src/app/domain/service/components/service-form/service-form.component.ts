@@ -4,7 +4,7 @@ import { ServiceApi } from '../../apis/service.api';
 import { SnackBarService } from '@/shared/services/snackbar.service';
 import { iServicePayload, iServiceResponse } from '../../interface/service.interface';
 import { LoadingService } from '@/domain/auth/services/loading.service';
-import { delay, finalize } from 'rxjs';
+import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -63,7 +63,6 @@ export class ServiceFormComponent implements OnChanges {
 
     request$
       .pipe(
-        delay(500),
         finalize(() => this._isLoading.stop()),
         takeUntilDestroyed(this._destroy$)
       )

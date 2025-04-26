@@ -11,7 +11,7 @@ import { iStatusRequest, iStatusResponse } from '../../interfaces/status.interfa
 import { LoadingService } from '@/domain/auth/services/loading.service';
 import { SnackBarService } from '@/shared/services/snackbar.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { delay, finalize } from 'rxjs';
+import { finalize } from 'rxjs';
 import { StatusApi } from '../../apis/status.api';
 import { createStatusFormControl } from '../../constants/status-form';
 
@@ -84,7 +84,6 @@ export class StatusFormComponent {
 
     request$
       .pipe(
-        delay(500),
         finalize(() => {
           this._isLoading.stop();
           this.formState.update(state => ({

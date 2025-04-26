@@ -18,7 +18,7 @@
         <div class="space-y-1">
           <label for="fullname" class="block text-sm font-medium text-gray-700">Nome e Sobrenome</label>
           <div class="relative flex items-center">
-            <i class="pi pi-user absolute left-3 text-gray-500"></i>
+            <i class="pi pi-user-edit absolute left-3 text-gray-500"></i>
             <input
               pInputText
               id="fullname"
@@ -79,7 +79,7 @@
         <div class="space-y-1">
           <label for="username" class="block text-sm font-medium text-gray-700">Usuário</label>
           <div class="relative flex items-center">
-            <i class="pi pi-envelope absolute left-3 text-gray-500"></i>
+            <i class="pi pi-user absolute left-3 text-gray-500"></i>
             <input
               (keydown.space)="$event.preventDefault()"
               pInputText
@@ -132,16 +132,16 @@
             ></p-password>
           </div>
           <small *ngIf="signupForm.get('password')?.invalid && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)" class="text-red-600 text-xs">
-            {{ signupForm.get('password')?.errors?.['required'] ? 'Senha é obrigatória' : 'Senha deve ter pelo menos 6 caracteres' }}
+            {{ signupForm.get('password')?.errors?.['required'] ? 'Senha é obrigatória' : 'Senha deve ter pelo menos 8 caracteres' }}
           </small>
         </div>
 
         <div class="pt-4">
           <p-button
             type="submit"
-            label="Cadastrar"
+            [label]="_isLoading.isLoading() ? 'Cadastrando...' : 'Cadastrar'"
             icon="pi pi-check"
-            [disabled]="signupForm.invalid"
+            [disabled]="signupForm.invalid || _isLoading.isLoading()"
             severity="contrast"
             styleClass="w-full p-button-lg bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 border-0 text-white font-bold shadow-lg"
           ></p-button>

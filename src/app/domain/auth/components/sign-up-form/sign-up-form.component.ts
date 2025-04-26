@@ -11,7 +11,7 @@ import { LoadingService } from '../../services/loading.service';
 import { iUserCreateRequest } from '@/domain/user/interfaces/user.interface';
 import { createUserSignUpFormControl } from '../../constants/sign-up-form';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { delay, finalize } from 'rxjs';
+import { finalize } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { CalendarModule } from 'primeng/calendar';
 import { PasswordModule } from 'primeng/password';
@@ -22,6 +22,7 @@ import { DividerModule } from 'primeng/divider';
 import { CardModule } from 'primeng/card';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { MessageService } from 'primeng/api';
 
 const MODULES = [
   CommonModule,
@@ -50,12 +51,14 @@ const MODULES = [
   templateUrl: './sign-up-form.component.html',
   styleUrl: './sign-up-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [MessageService],
 })
 export class SignUpFormComponent implements OnInit {
   private readonly _userApi = inject(UserApi);
   private readonly _snackBarService = inject(SnackBarService);
   public readonly _isLoading = inject(LoadingService);
   private readonly _destroy$ = inject(DestroyRef);
+  private readonly _messageService = inject(MessageService);
   private readonly router = inject(Router);
 
   @Output() onSave = new EventEmitter<void>();
@@ -109,7 +112,6 @@ export class SignUpFormComponent implements OnInit {
     this._userApi
       .create(req)
       .pipe(
-        delay(500),
         finalize(() => this._isLoading.stop()),
         takeUntilDestroyed(this._destroy$)
       )
@@ -117,12 +119,22 @@ export class SignUpFormComponent implements OnInit {
         next: data => {
           this.lista = [data];
         },
-        // error: error => {
-        //   this._snackBarService.showSnackBar(error?.error?.message, 3000, 'end', 'top');
-        //   console.error('Error:', error);
-        // },
+        error: error => {
+          this._messageService.add({
+            severity: 'danger',
+            summary: 'Erro',
+            detail: 'Erro ao cadastrar usuário',
+            life: 3000,
+          });
+          console.error('Error:', error);
+        },
         complete: () => {
-          this._snackBarService.showSnackBar('Usuário cadastrado com sucesso!', 3000, 'center', 'bottom');
+          this._messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'Cadastro efetuado com sucesso!',
+            life: 3000,
+          });
           this.signupForm.reset();
           this.onSave.emit();
           this.router.navigate(['/login']);

@@ -2,7 +2,7 @@ import { LoadingService } from '@/domain/auth/services/loading.service';
 import { SnackBarService } from '@/shared/services/snackbar.service';
 import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { delay, finalize } from 'rxjs';
+import { finalize } from 'rxjs';
 import { createQueueFormControl } from '../../constants/queue-form';
 import { QueueApi } from '../../apis/queue.api';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -46,7 +46,7 @@ export class QueueFormComponent implements OnInit {
   private readonly _serviceApi = inject(ServiceApi);
   private readonly _authService = inject(AuthService);
   private readonly _snackBarService = inject(SnackBarService);
-  private readonly _isLoading = inject(LoadingService);
+  public readonly _isLoading = inject(LoadingService);
   private readonly _destroy$ = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly _barbershopService = inject(BarbershopService);
@@ -170,7 +170,6 @@ export class QueueFormComponent implements OnInit {
         idServices: idServices.map((id: number | string) => id.toString()),
       })
       .pipe(
-        delay(4000),
         finalize(() => this._isLoading.stop()),
         takeUntilDestroyed(this._destroy$)
       )

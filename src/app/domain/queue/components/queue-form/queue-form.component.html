@@ -70,10 +70,11 @@
       <button
         pButton
         type="submit"
-        label="Entrar na Fila"
+        icon="pi pi-send"
+        [label]="_isLoading.isLoading() ? 'Entrando...' : 'Entrar na fila'"
         class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md"
         severity="contrast"
-        [disabled]="queueForm.invalid || !isOk() || isShopClosed()"
+        [disabled]="queueForm.invalid || _isLoading.isLoading()"
       ></button>
     </div>
   </form>

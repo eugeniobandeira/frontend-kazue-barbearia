@@ -29,7 +29,7 @@ export function createUserSignUpFormControl(): FormGroup<UserFormControl> {
       nonNullable: true,
     }),
     username: new FormControl('', {
-      validators: [Validators.required, Validators.pattern(/^\S*$/)],
+      validators: [Validators.required, Validators.pattern(/^\S*$/), Validators.minLength(3)],
       nonNullable: true,
     }),
     phone: new FormControl('', {
@@ -37,7 +37,7 @@ export function createUserSignUpFormControl(): FormGroup<UserFormControl> {
       nonNullable: true,
     }),
     password: new FormControl('', {
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.minLength(8)],
       nonNullable: true,
     }),
     role: new FormControl(eRoles.USER, {

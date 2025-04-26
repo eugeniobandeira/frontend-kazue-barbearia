@@ -11,11 +11,11 @@ export function createLoginFormControl(): FormGroup<LoginFormControl> {
 
   return fb.group({
     username: new FormControl('', {
-      validators: [Validators.required, Validators.pattern(/^\S*$/)],
+      validators: [Validators.required, Validators.pattern(/^\S*$/), Validators.minLength(3)],
       nonNullable: true,
     }),
     password: new FormControl('', {
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.minLength(8)],
       nonNullable: true,
     }),
   });
