@@ -2,11 +2,47 @@
   <router-outlet></router-outlet>
   <app-manage-status></app-manage-status>
 
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+  <!-- <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
     <p-button label="Atualizar Status Barbearia" icon="pi pi-refresh" (click)="showDialog()" class="status-button p-button-outlined" severity="contrast"> </p-button>
     <p-button label="Fila de Aprovação" icon="pi pi-user" class="status-button p-button-outlined" severity="contrast" [routerLink]="['/approval']"> </p-button>
     <p-button label="Serviços" icon="pi pi-money-bill" class="status-button p-button-outlined" severity="contrast" [routerLink]="['/services']"> </p-button>
     <p-button label="Status" icon="pi pi-bell" class="status-button p-button-outlined" severity="contrast" [routerLink]="['/status']"> </p-button>
+  </div> -->
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <!-- Botão com click -->
+    <div
+      (click)="showDialog()"
+      class="flex items-center justify-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors status-button"
+    >
+      <i class="pi pi-refresh"></i>
+      <span class="redirect">Atualizar Status Barbearia</span>
+    </div>
+
+    <!-- Links com routerLink -->
+    <a
+      [routerLink]="['/approval']"
+      class="flex items-center justify-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors status-button"
+    >
+      <i class="pi pi-user"></i>
+      <span class="redirect">Fila de Aprovação</span>
+    </a>
+
+    <a
+      [routerLink]="['/services']"
+      class="flex items-center justify-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors status-button"
+    >
+      <i class="pi pi-money-bill"></i>
+      <span class="redirect">Serviços</span>
+    </a>
+
+    <a
+      [routerLink]="['/status']"
+      class="flex items-center justify-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors status-button"
+    >
+      <i class="pi pi-bell"></i>
+      <span class="redirect">Status</span>
+    </a>
   </div>
 
   <p-dialog header="Atualizar Status" [(visible)]="displayDialog" [style]="{width: '360px'}" [modal]="true" [dismissableMask]="true" [closable]="true">

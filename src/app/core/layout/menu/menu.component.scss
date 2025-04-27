@@ -1,3 +1,4 @@
-:host ::ng-deep .p-menubar p-component {
-  background-color: aqua;
+::ng-deep .p-menubar {
+  white-space: nowrap;
+  overflow-x: auto;
 }

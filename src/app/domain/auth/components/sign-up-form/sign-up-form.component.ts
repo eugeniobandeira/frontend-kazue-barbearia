@@ -1,6 +1,6 @@
 import { UserApi } from '@/domain/user/apis/user.api';
 import { SnackBarService } from '@/shared/services/snackbar.service';
-import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, inject, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -52,6 +52,7 @@ const MODULES = [
   styleUrl: './sign-up-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MessageService],
+  // encapsulation: ViewEncapsulation.None,
 })
 export class SignUpFormComponent implements OnInit {
   private readonly _userApi = inject(UserApi);

@@ -12,3 +12,79 @@ body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
+
+.dark input,
+.dark p-dropdown,
+.dark .p-multiselect-label-container,
+.dark p-multiselect,
+.dark .p-select-label,
+.dark .p-inputtext,
+.dark .p-inputmask,
+.dark .p-password .p-password-input {
+  background-color: transparent !important;
+  border-color: #4b556327 !important;
+  color: black !important;
+}
+
+.dark .p-inputtext::placeholder,
+.dark .p-inputmask::placeholder {
+  color: rgba(0, 0, 0, 0.393) !important;
+}
+
+.dark .p-inputtext ~ .pi,
+.dark .p-inputmask ~ .pi {
+  color: black !important;
+  background-color: red;
+}
+
+.dark .p-inputmask[placeholder='dd/mm/aaaa'] {
+  background-color: transparent !important;
+}
+
+.dark label {
+  color: rgba(0, 0, 0, 0.879) !important;
+}
+
+.dark .p-button.p-button-contrast {
+  border-color: #8b91a4 !important;
+  color: white !important;
+
+  &:hover {
+    background-color: whitesmoke;
+    box-shadow: 2px 4px rgba(0, 0, 0, 0.8);
+  }
+}
+
+.dark .p-button.p-button-contrast:hover {
+  border-color: #2b2c2f !important;
+}
+
+.dark span {
+  color: black;
+}
+
+.dark span.about.instagram {
+  color: yellow;
+}
+
+.dark div span.redirect {
+  color: white;
+}
+
+.dark .p-select-list,
+.dark .p-ripple .p-multiselect-option {
+  background-color: whitesmoke;
+  border: none;
+}
+
+.dark .ng-star-inserted {
+  color: white;
+}
+
+.dark app-menu .p-menubar-item-link span {
+  color: #e2e2e2;
+}
+
+.dark .ng-star-inserted {
+  color: #000000;
+}
