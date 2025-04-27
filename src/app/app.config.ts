@@ -18,6 +18,9 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({
       theme: {
         preset: Aura,
+        options: {
+          colorScheme: 'auto',
+        },
       },
     }),
     provideHttpClient(withInterceptorsFromDi(), withInterceptors([loadingInterceptor, errorInterceptor])),

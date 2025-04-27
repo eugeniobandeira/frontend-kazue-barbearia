@@ -6,6 +6,6 @@ export const serviceRoutes: Routes = [
     path: 'services',
     loadComponent: () => import('./pages/service-view/service-view.component').then(c => c.ServiceViewComponent),
     canActivate: [RolesGuard],
-    // data: { roles: ['admin'] },
+    data: { roles: ['admin'] },
   },
 ];
