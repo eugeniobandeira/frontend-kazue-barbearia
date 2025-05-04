@@ -52,16 +52,12 @@ export class QueueComponent implements OnInit {
       .pipe(
         finalize(() => this.loading.set(false)),
         catchError(err => {
-          this._messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Falha ao carregar dados da fila. Error: ' + err.message,
-          });
+          console.error('error: ', err);
           return EMPTY;
         })
       )
       .subscribe({
-        next: (apiResponse: iApiResponse<iQueueResponse[]>) => {},
+        next: () => {},
         error: err => console.error('Error loading queue:', err),
       });
   }

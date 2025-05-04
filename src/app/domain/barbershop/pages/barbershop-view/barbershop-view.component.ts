@@ -12,6 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { QueueManagerComponent } from '../../components/queue-manager/queue-manager.component';
 import { RouterModule } from '@angular/router';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 const COMPONENTS = [ManageStatusComponent, ManageStatusFormComponent, QueueManagerComponent];
 
@@ -27,6 +28,7 @@ const MODULES = [
   DialogModule,
   DropdownModule,
   RouterModule,
+  NgxSpinnerModule,
 ];
 
 @Component({

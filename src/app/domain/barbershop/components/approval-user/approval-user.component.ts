@@ -23,6 +23,8 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { finalize, catchError, EMPTY } from 'rxjs';
 import { StatusUtils } from '@/shared/utils/status-severirty';
+import { PhonePipe } from '../../../../widget/pipes/phone.pipe';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 const MODULES = [
   CommonModule,
@@ -39,11 +41,12 @@ const MODULES = [
   SelectModule,
   MultiSelectModule,
   ProgressSpinnerModule,
+  NgxSpinnerModule,
 ];
 
 @Component({
   selector: 'app-approval-user',
-  imports: [...MODULES],
+  imports: [...MODULES, PhonePipe],
   templateUrl: './approval-user.component.html',
   styleUrl: './approval-user.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -123,6 +126,11 @@ export class ApprovalUserComponent implements OnInit {
         next: (response: iApiResponse<iUser[]>) => {
           this.userList.set(response.response);
           this.totalRecords.set(response.resultCount);
+          this._messageService.add({
+            severity: 'sucess',
+            summary: 'Sucesso',
+            detail: 'Atualização efetuada.',
+          });
         },
         error: () => {
           this.userList.set([]);
