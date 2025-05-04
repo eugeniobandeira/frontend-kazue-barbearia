@@ -3,8 +3,6 @@ import { createServiceFormControl } from '../../constants/service-form';
 import { ServiceApi } from '../../apis/service.api';
 import { SnackBarService } from '@/shared/services/snackbar.service';
 import { iServicePayload, iServiceResponse } from '../../interface/service.interface';
-import { LoadingService } from '@/domain/auth/services/loading.service';
-import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,7 +24,6 @@ const MODULES = [MatFormFieldModule, MatIconModule, MatInputModule, MatSelectMod
 export class ServiceFormComponent implements OnChanges {
   private readonly _serviceApi = inject(ServiceApi);
   private readonly _snackBarService = inject(SnackBarService);
-  private readonly _isLoading = inject(LoadingService);
   private readonly _destroy$ = inject(DestroyRef);
 
   @Output() onSave = new EventEmitter<void>();
@@ -49,8 +46,6 @@ export class ServiceFormComponent implements OnChanges {
   }
 
   onSubmit(): void {
-    this._isLoading.start();
-
     const { code, description, price } = this.serviceForm.getRawValue();
 
     const req: iServicePayload = {
@@ -61,25 +56,20 @@ export class ServiceFormComponent implements OnChanges {
 
     const request$ = this.serviceToEdit ? this._serviceApi.update(this.serviceToEdit.id, req) : this._serviceApi.create(req);
 
-    request$
-      .pipe(
-        finalize(() => this._isLoading.stop()),
-        takeUntilDestroyed(this._destroy$)
-      )
-      .subscribe({
-        next: data => {
-          this.lista = [data];
-        },
-        error: error => {
-          this._snackBarService.showSnackBar(error?.error?.message, 3000, 'end', 'top');
-          console.error('Error:', error);
-        },
-        complete: () => {
-          const message = this.serviceToEdit ? 'Serviço atualizado com sucesso' : 'Serviço criado com sucesso';
-          this._snackBarService.showSnackBar(message, 3000, 'end', 'top');
-          this.serviceForm.reset();
-          this.onSave.emit();
-        },
-      });
+    request$.pipe(takeUntilDestroyed(this._destroy$)).subscribe({
+      next: data => {
+        this.lista = [data];
+      },
+      error: error => {
+        this._snackBarService.showSnackBar(error?.error?.message, 3000, 'end', 'top');
+        console.error('Error:', error);
+      },
+      complete: () => {
+        const message = this.serviceToEdit ? 'Serviço atualizado com sucesso' : 'Serviço criado com sucesso';
+        this._snackBarService.showSnackBar(message, 3000, 'end', 'top');
+        this.serviceForm.reset();
+        this.onSave.emit();
+      },
+    });
   }
 }

@@ -1,4 +1,3 @@
-import { LoadingService } from '@/domain/auth/services/loading.service';
 import { SnackBarService } from '@/shared/services/snackbar.service';
 import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -46,7 +45,6 @@ export class QueueFormComponent implements OnInit {
   private readonly _serviceApi = inject(ServiceApi);
   private readonly _authService = inject(AuthService);
   private readonly _snackBarService = inject(SnackBarService);
-  public readonly _isLoading = inject(LoadingService);
   private readonly _destroy$ = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly _barbershopService = inject(BarbershopService);
@@ -159,7 +157,6 @@ export class QueueFormComponent implements OnInit {
   onSubmit(): void {
     if (this.queueForm.invalid) return;
 
-    this._isLoading.start();
     const { idBarber, amount, idServices } = this.queueForm.getRawValue();
 
     this._queueApi
@@ -169,10 +166,7 @@ export class QueueFormComponent implements OnInit {
         amount,
         idServices: idServices.map((id: number | string) => id.toString()),
       })
-      .pipe(
-        finalize(() => this._isLoading.stop()),
-        takeUntilDestroyed(this._destroy$)
-      )
+      .pipe(takeUntilDestroyed(this._destroy$))
       .subscribe({
         next: () => this.handleSuccess(),
         error: error => this.handleError(error),

@@ -71,10 +71,10 @@
         pButton
         type="submit"
         icon="pi pi-send"
-        [label]="_isLoading.isLoading() ? 'Entrando...' : 'Entrar na fila'"
+        [label]="'Entrar na fila'"
         class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md"
         severity="contrast"
-        [disabled]="queueForm.invalid || _isLoading.isLoading()"
+        [disabled]="queueForm.invalid"
       ></button>
     </div>
   </form>

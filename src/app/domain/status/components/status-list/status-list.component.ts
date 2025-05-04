@@ -6,7 +6,6 @@ import { TableModule } from 'primeng/table';
 import { iStatusResponse } from '../../interfaces/status.interface';
 import { StatusApi } from '../../apis/status.api';
 import { SnackBarService } from '@/shared/services/snackbar.service';
-import { LoadingService } from '@/domain/auth/services/loading.service';
 
 const MODULES = [TableModule, CommonModule, ButtonModule];
 
@@ -21,7 +20,6 @@ const MODULES = [TableModule, CommonModule, ButtonModule];
 export class StatusListComponent implements OnInit {
   private readonly _statusApi = inject(StatusApi);
   private readonly _snackBarService = inject(SnackBarService);
-  private readonly _isLoading = inject(LoadingService);
   private readonly _destroy$ = inject(DestroyRef);
 
   selectedStatus = signal<iStatusResponse | null>(null);
@@ -37,23 +35,17 @@ export class StatusListComponent implements OnInit {
   }
 
   onLoad(): void {
-    this._isLoading.start();
     this._statusApi
       .loadAll()
       .pipe(takeUntilDestroyed(this._destroy$))
       .subscribe({
         error: error => {
-          this._snackBarService.showSnackBar(error?.error?.message || 'Erro ao carregar status.', 3000, 'center', 'bottom');
-        },
-        complete: () => {
-          this._isLoading.stop();
+          this._snackBarService.showSnackBar(error?.error?.message ?? 'Erro ao carregar status.', 3000, 'center', 'bottom');
         },
       });
   }
 
   onDelete(status: iStatusResponse) {
-    this._isLoading.start();
-
     this._statusApi
       .delete(status.id)
       .pipe(takeUntilDestroyed(this._destroy$))
@@ -62,10 +54,7 @@ export class StatusListComponent implements OnInit {
           this._snackBarService.showSnackBar('Status excluído com sucesso.', 3000, 'center', 'bottom');
         },
         error: error => {
-          this._snackBarService.showSnackBar(error?.error?.message || 'Erro ao excluir status.', 3000, 'center', 'bottom');
-        },
-        complete: () => {
-          this._isLoading.stop();
+          this._snackBarService.showSnackBar(error?.error?.message ?? 'Erro ao excluir status.', 3000, 'center', 'bottom');
         },
       });
   }

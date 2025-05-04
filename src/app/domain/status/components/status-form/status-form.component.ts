@@ -8,7 +8,6 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { iStatusRequest, iStatusResponse } from '../../interfaces/status.interface';
-import { LoadingService } from '@/domain/auth/services/loading.service';
 import { SnackBarService } from '@/shared/services/snackbar.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
@@ -28,7 +27,6 @@ const MODULES = [MatFormFieldModule, MatIconModule, MatInputModule, MatSelectMod
 export class StatusFormComponent {
   private readonly _statusApi = inject(StatusApi);
   private readonly _snackBarService = inject(SnackBarService);
-  private readonly _isLoading = inject(LoadingService);
   private readonly _destroy$ = inject(DestroyRef);
 
   @Output() onSave = new EventEmitter<void>();
@@ -70,8 +68,6 @@ export class StatusFormComponent {
       error: null,
     }));
 
-    this._isLoading.start();
-
     const formValue = this.statusForm.getRawValue();
     const req: iStatusRequest = {
       code: formValue.code,
@@ -85,7 +81,6 @@ export class StatusFormComponent {
     request$
       .pipe(
         finalize(() => {
-          this._isLoading.stop();
           this.formState.update(state => ({
             ...state,
             submitted: false,
