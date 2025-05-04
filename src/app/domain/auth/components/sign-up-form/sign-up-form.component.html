@@ -139,9 +139,9 @@
         <div class="pt-4">
           <p-button
             type="submit"
-            [label]="_isLoading.isLoading() ? 'Cadastrando...' : 'Cadastrar'"
+            [label]="'Cadastrar'"
             icon="pi pi-check"
-            [disabled]="signupForm.invalid || _isLoading.isLoading()"
+            [disabled]="signupForm.invalid"
             severity="contrast"
             styleClass="w-full p-button-lg bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 border-0 text-white font-bold shadow-lg"
           ></p-button>

@@ -7,7 +7,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ButtonModule } from 'primeng/button';
-import { LoadingService } from '../../services/loading.service';
 import { iUserCreateRequest } from '@/domain/user/interfaces/user.interface';
 import { createUserSignUpFormControl } from '../../constants/sign-up-form';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -23,6 +22,7 @@ import { CardModule } from 'primeng/card';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
+import { LoadingService } from '@/shared/services/loading.service';
 
 const MODULES = [
   CommonModule,
@@ -52,12 +52,10 @@ const MODULES = [
   styleUrl: './sign-up-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MessageService],
-  // encapsulation: ViewEncapsulation.None,
 })
 export class SignUpFormComponent implements OnInit {
   private readonly _userApi = inject(UserApi);
-  private readonly _snackBarService = inject(SnackBarService);
-  public readonly _isLoading = inject(LoadingService);
+  public readonly loadingService = inject(LoadingService);
   private readonly _destroy$ = inject(DestroyRef);
   private readonly _messageService = inject(MessageService);
   private readonly router = inject(Router);
@@ -89,8 +87,6 @@ export class SignUpFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this._isLoading.start();
-
     const formValue = this.signupForm.getRawValue();
 
     const rawPhone = formValue.phone?.replace(/\D/g, '') || '';
@@ -112,10 +108,7 @@ export class SignUpFormComponent implements OnInit {
 
     this._userApi
       .create(req)
-      .pipe(
-        finalize(() => this._isLoading.stop()),
-        takeUntilDestroyed(this._destroy$)
-      )
+      .pipe(takeUntilDestroyed(this._destroy$))
       .subscribe({
         next: data => {
           this.lista = [data];

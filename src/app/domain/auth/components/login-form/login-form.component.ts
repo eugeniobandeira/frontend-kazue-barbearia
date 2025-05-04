@@ -12,11 +12,11 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputMaskModule } from 'primeng/inputmask';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { PasswordModule } from 'primeng/password';
-import { LoadingService } from '../../services/loading.service';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '@/core/services/auth.service';
 import { MessageService } from 'primeng/api';
 import { NavigationUtils } from '@/shared/utils/navigation';
+import { LoadingService } from '@/shared/services/loading.service';
 
 const MODULES = [
   CommonModule,
@@ -44,8 +44,7 @@ const MODULES = [
 export class LoginFormComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly _authService = inject(AuthService);
-  private readonly _snackBarService = inject(SnackBarService);
-  public readonly _isLoading = inject(LoadingService);
+  public readonly loadingService = inject(LoadingService);
   private readonly _messageService = inject(MessageService);
   private readonly _navigationUtils = inject(NavigationUtils);
 
@@ -55,7 +54,7 @@ export class LoginFormComponent implements OnInit {
 
   ngOnInit() {
     this.visible = true;
-    this._isLoading.stop();
+    // this._isLoading.stop();
   }
 
   showDialog() {
@@ -69,7 +68,6 @@ export class LoginFormComponent implements OnInit {
   onSubmit() {
     if (this.loginForm.invalid) return;
 
-    this._isLoading.start();
     const { username, password } = this.loginForm.getRawValue();
     const req: iLogin = { username, password };
 
@@ -78,7 +76,6 @@ export class LoginFormComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: user => {
-          this._isLoading.stop();
           this._messageService.add({
             severity: 'success',
             summary: 'Sucesso',
@@ -89,7 +86,6 @@ export class LoginFormComponent implements OnInit {
           this._navigationUtils.goHome();
         },
         error: err => {
-          this._isLoading.stop();
           this._messageService.add({
             severity: 'error',
             summary: 'Erro',
