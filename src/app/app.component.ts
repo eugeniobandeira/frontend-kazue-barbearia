@@ -1,23 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
-const MODULES = [RouterModule];
+const MODULES = [RouterModule, NgxSpinnerModule, ToastModule];
+
+interface NgxSpinnerConfig {
+  type?: string;
+}
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [...MODULES],
-  template: ` <router-outlet></router-outlet> `,
+  providers: [MessageService],
+  template: `
+    <router-outlet></router-outlet>
+    <ngx-spinner name="globalSpinner" bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple">
+      <p style="font-size: 20px; color: white">Carregando...</p>
+    </ngx-spinner>
+    <p-toast></p-toast>
+  `,
 })
-export class AppComponent implements OnInit {
-  ngOnInit() {
-    // Verifica o modo do sistema e aplica a classe 'dark' no html
-    const darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.classList.toggle('dark', darkMode);
-
-    // Opcional: Observa mudanças no modo do sistema
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-      document.documentElement.classList.toggle('dark', e.matches);
+export class AppComponent {
+  private readonly messageService = inject(MessageService);
+  showToast() {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Sucesso!',
+      detail: 'Carregamento completado com sucesso!',
     });
   }
 }
