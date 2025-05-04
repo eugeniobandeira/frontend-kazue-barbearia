@@ -33,12 +33,19 @@ export class AuthService {
     });
   }
 
+  // getToken(): string | null {
+  //   return this.user()?.token ?? null;
+  // }
   getToken(): string | null {
-    return this.user()?.token ?? null;
+    return this.getUser()?.token ?? null;
   }
 
+  // getUser(): iUserRegisteredResponse | null {
+  //   return this.user();
+  // }
+
   getUser(): iUserRegisteredResponse | null {
-    return this.user();
+    return this.userSig() ?? this.storage.get<iUserRegisteredResponse>('auth');
   }
 
   private initializeAuthState(): void {
