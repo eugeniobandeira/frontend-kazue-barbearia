@@ -1,7 +1,7 @@
-import { LoadingService } from '@/domain/auth/services/loading.service';
+import { LoadingService } from '@/shared/services/loading.service';
 import { HttpRequest, HttpHandlerFn, HttpEvent } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { finalize, Observable, tap } from 'rxjs';
 
 export const loadingInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {
   const loadingService = inject(LoadingService);
@@ -10,7 +10,9 @@ export const loadingInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerF
 
   return next(req).pipe(
     tap({
-      finalize: () => loadingService.stop(),
-    })
+      next: () => {},
+      error: () => {},
+    }),
+    finalize(() => loadingService.stop())
   );
 };

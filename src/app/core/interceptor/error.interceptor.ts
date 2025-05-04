@@ -29,8 +29,8 @@ export const errorInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn)
           router.navigate(['/error/403'], { replaceUrl: true });
           break;
 
-        default:
-          let message = 'Erro.';
+        default: {
+          let message = 'Erro: ';
           const err = error.error;
 
           if (Array.isArray(err?.errorMessage)) {
@@ -42,6 +42,7 @@ export const errorInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn)
           }
 
           notificationService.showError(message);
+        }
       }
       return throwError(() => error);
     })
