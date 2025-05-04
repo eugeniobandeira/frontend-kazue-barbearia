@@ -10,6 +10,7 @@ import { WaitingApprovalComponent } from './core/pages/waiting-approval/waiting-
 
 export const routes: Route[] = [
   {
+    ...authRoutes,
     path: '',
     loadComponent: () => import('./core/layout/main/main.component').then(m => m.MainComponent),
     children: [

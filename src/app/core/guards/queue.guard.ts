@@ -6,7 +6,7 @@ import { AuthService } from '../services/auth.service';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate {
+export class QueueGuard implements CanActivate {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
@@ -15,7 +15,12 @@ export class AuthGuard implements CanActivate {
     const token = this.authService.getToken();
 
     if (user && token && this.authService.isTokenValid(token) && user.id) {
-      return true;
+      if (user.status === 'Aprovado') {
+        return true;
+      } else {
+        this.router.navigate(['/waiting-for-approval']);
+        return false;
+      }
     }
 
     this.router.navigate(['/login']);
