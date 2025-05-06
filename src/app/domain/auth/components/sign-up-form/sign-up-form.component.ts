@@ -66,6 +66,7 @@ export class SignUpFormComponent implements OnInit {
 
   lista: any[] = [];
   showCalendar = false;
+  maxDate = new Date();
 
   ngOnInit() {
     this.setupNicknameValidation();
@@ -93,8 +94,6 @@ export class SignUpFormComponent implements OnInit {
 
     const nickname = formValue.nicknamePreference ? formValue.nickname : null;
 
-    const formattedDate = formValue.dateOfBirth ? new Date(formValue.dateOfBirth).toISOString().split('T')[0] : null;
-
     const req: iUserCreateRequest = {
       fullname: formValue.fullname,
       nicknamePreference: formValue.nicknamePreference,
@@ -103,7 +102,7 @@ export class SignUpFormComponent implements OnInit {
       phone: rawPhone,
       password: formValue.password,
       role: formValue.role,
-      dateOfBirth: formattedDate,
+      dateOfBirth: formValue.dateOfBirth,
     };
 
     this._userApi
