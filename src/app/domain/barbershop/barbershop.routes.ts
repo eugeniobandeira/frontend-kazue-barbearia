@@ -18,4 +18,10 @@ export const barbershopRoutes: Routes = [
     data: { roles: ['admin'] },
     loadComponent: () => import('./components/approval-user/approval-user.component').then(c => c.ApprovalUserComponent),
   },
+  {
+    path: 'history',
+    canActivate: [RolesGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () => import('./components/queue-history/queue-history.component').then(c => c.QueueHistoryComponent),
+  },
 ];

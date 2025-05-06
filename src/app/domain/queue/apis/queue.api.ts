@@ -50,6 +50,17 @@ export class QueueApi {
     );
   }
 
+  public getHistory(date: string): Observable<iApiResponse<iQueueResponse[]>> {
+    return this._httpClient.get<iApiResponse<iQueueResponse[]>>(`${this.API_URL}/filter?date=${date}`).pipe(
+      tap(response => {
+        let filtered = response.response;
+
+        this.queueListByDate.set(filtered);
+        this.queueList.set(filtered);
+      })
+    );
+  }
+
   public create(req: iQueueRequest): Observable<iQueueResponse> {
     return this._httpClient.post<iQueueResponse>(this.API_URL, req).pipe(
       tap(newQueueItem => {

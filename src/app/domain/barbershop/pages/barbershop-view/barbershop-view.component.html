@@ -36,6 +36,14 @@
       <i class="pi pi-bell"></i>
       <span class="redirect">Status</span>
     </a>
+
+    <a
+      [routerLink]="['/history']"
+      class="flex items-center justify-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors status-button"
+    >
+      <i class="pi pi-bell"></i>
+      <span class="redirect">Histórico</span>
+    </a>
   </div>
 
   <p-dialog header="Atualizar Status" [(visible)]="displayDialog" [style]="{width: '360px'}" [modal]="true" [dismissableMask]="true" [closable]="true">

@@ -66,5 +66,5 @@ export interface iUserCreateRequest {
   phone: string;
   password: string;
   role: eRoles;
-  dateOfBirth: string | null;
+  dateOfBirth: Date | null;
 }
