@@ -4,13 +4,12 @@ import { environment } from '@environments/environment';
 import { iQueueGet, iQueueRequest, iQueueResponse, iQueueUpdateRequest } from '../interfaces/queue.interface';
 import { Observable, tap } from 'rxjs';
 import { iApiResponse } from '@/shared/interfaces/api-response.interface';
-import { eDomain } from '@/domain/status/enums/domain.enum';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QueueApi {
-  private readonly API_URL = environment.apiUrl + '/queue';
+  private readonly _API_URL = environment.apiUrl + '/queue';
   private readonly _httpClient = inject(HttpClient);
 
   public isLoading = signal(false);
@@ -32,11 +31,11 @@ export class QueueApi {
   }
 
   public getById(id: number): Observable<iQueueResponse> {
-    return this._httpClient.get<iQueueResponse>(`${this.API_URL}/${id}`);
+    return this._httpClient.get<iQueueResponse>(`${this._API_URL}/${id}`);
   }
 
   public getByDate(date: string): Observable<iApiResponse<iQueueResponse[]>> {
-    return this._httpClient.get<iApiResponse<iQueueResponse[]>>(`${this.API_URL}/filter?date=${date}`).pipe(
+    return this._httpClient.get<iApiResponse<iQueueResponse[]>>(`${this._API_URL}/filter?date=${date}`).pipe(
       tap(response => {
         let filtered = response.response;
 
@@ -51,7 +50,7 @@ export class QueueApi {
   }
 
   public getHistory(date: string): Observable<iApiResponse<iQueueResponse[]>> {
-    return this._httpClient.get<iApiResponse<iQueueResponse[]>>(`${this.API_URL}/filter?date=${date}`).pipe(
+    return this._httpClient.get<iApiResponse<iQueueResponse[]>>(`${this._API_URL}/filter?date=${date}`).pipe(
       tap(response => {
         let filtered = response.response;
 
@@ -62,7 +61,7 @@ export class QueueApi {
   }
 
   public create(req: iQueueRequest): Observable<iQueueResponse> {
-    return this._httpClient.post<iQueueResponse>(this.API_URL, req).pipe(
+    return this._httpClient.post<iQueueResponse>(this._API_URL, req).pipe(
       tap(newQueueItem => {
         this.queueListByDate.set([...this.queueListByDate(), newQueueItem]);
         this.queueList.set([...this.queueList(), newQueueItem]);
@@ -71,7 +70,7 @@ export class QueueApi {
   }
 
   public update(id: number, req: iQueueUpdateRequest): Observable<iQueueResponse> {
-    return this._httpClient.put<iQueueResponse>(`${this.API_URL}/${id}`, req).pipe(
+    return this._httpClient.put<iQueueResponse>(`${this._API_URL}/${id}`, req).pipe(
       tap(updatedQueueItem => {
         const updatedQueue = this.queueListByDate().map(item => (item.id === id ? { ...item, ...updatedQueueItem } : item));
         this.queueListByDate.set(updatedQueue);
@@ -83,7 +82,7 @@ export class QueueApi {
   }
 
   public delete(id: number): Observable<void> {
-    return this._httpClient.delete<void>(`${this.API_URL}/${id}`).pipe(
+    return this._httpClient.delete<void>(`${this._API_URL}/${id}`).pipe(
       tap(() => {
         const updatedQueue = this.queueListByDate().filter(item => item.id !== id);
         this.queueListByDate.set(updatedQueue);

@@ -9,7 +9,7 @@ import { Observable, finalize, catchError, throwError } from 'rxjs';
   providedIn: 'root',
 })
 export class LoginApi {
-  private readonly API_URL = environment.apiUrl + '/login';
+  private readonly _API_URL = environment.apiUrl + '/login';
   private readonly _httpClient = inject(HttpClient);
 
   public isLoading = signal(false);
@@ -17,7 +17,7 @@ export class LoginApi {
   public login(req: iLogin): Observable<iUserRegisteredResponse> {
     this.isLoading.set(true);
 
-    return this._httpClient.post<iUserRegisteredResponse>(this.API_URL, req).pipe(
+    return this._httpClient.post<iUserRegisteredResponse>(this._API_URL, req).pipe(
       finalize(() => this.isLoading.set(false)),
       catchError(error => {
         console.error('Erro no login', error);
