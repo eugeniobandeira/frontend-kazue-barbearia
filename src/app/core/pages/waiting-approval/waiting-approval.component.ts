@@ -12,13 +12,13 @@ const MODULES = [RouterModule, ButtonModule];
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaitingApprovalComponent {
-  private readonly router = inject(Router);
+  private readonly _router = inject(Router);
 
   goHome() {
-    this.router.navigate(['/']);
+    this._router.navigate(['/']);
   }
 
   goLogin() {
-    this.router.navigate(['/login']);
+    this._router.navigate(['/login']);
   }
 }

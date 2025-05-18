@@ -147,17 +147,6 @@ export class QueueManagerComponent implements OnInit {
     return this.barbershopInfo().isOpen || this.queue().length > 0;
   }
 
-  // getStatusSeverity(status: string): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' {
-  //   switch (status?.toUpperCase()) {
-  //     case 'EM ANDAMENTO':
-  //       return 'warn';
-  //     case 'FINALIZADO':
-  //       return 'success';
-  //     default:
-  //       return 'info';
-  //   }
-  // }
-
   openEditDialog(item: iQueueResponse): void {
     this.selectedItem = item;
     this.showDialog = true;

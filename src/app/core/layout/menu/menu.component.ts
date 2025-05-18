@@ -1,7 +1,7 @@
 import { AuthService } from '@/core/services/auth.service';
 import { NavigationUtils } from '@/shared/utils/navigation';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
@@ -18,7 +18,7 @@ const MODULES = [MenubarModule, RouterModule, CommonModule];
   encapsulation: ViewEncapsulation.None,
   providers: [NavigationUtils],
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent {
   items: MenuItem[] | undefined;
 
   router = inject(Router);
@@ -26,48 +26,30 @@ export class MenuComponent implements OnInit {
   private readonly navigationUtils = inject(NavigationUtils);
   private readonly authService = inject(AuthService);
 
-  ngOnInit() {
-    const user = this.authService.getUser();
-    const role = user?.role;
+  menuItems = computed<MenuItem[]>(() => {
+    const user = this.authService.user();
+    const isLoggedIn = !!user;
 
-    this.items = [
-      {
-        label: 'Home',
-        command: () => this.navigationUtils.goHome(),
-      },
+    const items: MenuItem[] = [
+      { label: 'Home', command: () => this.navigationUtils.goHome() },
       {
         icon: 'pi pi-angle-down',
         label: 'Usuário',
-        items: [
-          {
-            label: 'Cadastro',
-            command: () => this.navigationUtils.navigateTo('/sign-up'),
-          },
-          {
-            label: 'Login',
-            command: () => this.navigationUtils.navigateTo('/login'),
-          },
-          {
-            label: 'Sair',
-            command: () => this.authService.logout(),
-          },
-        ],
+        items: isLoggedIn
+          ? [{ label: 'Sair', command: () => this.authService.logout() }]
+          : [
+              { label: 'Cadastro', command: () => this.navigationUtils.navigateTo('/sign-up') },
+              { label: 'Login', command: () => this.navigationUtils.navigateTo('/login') },
+            ],
       },
-      {
-        label: 'Fila',
-        command: () => this.navigationUtils.navigateTo('/queue'),
-      },
-      {
-        label: 'Sobre',
-        command: () => this.navigationUtils.navigateTo('/about'),
-      },
+      { label: 'Fila', command: () => this.navigationUtils.navigateTo('/queue') },
+      { label: 'Sobre', command: () => this.navigationUtils.navigateTo('/about') },
     ];
 
-    if (role === 'admin') {
-      this.items.push({
-        label: 'Admin',
-        command: () => this.navigationUtils.navigateTo('/barbershop'),
-      });
+    if (user?.role === 'admin') {
+      items.push({ label: 'Admin', command: () => this.navigationUtils.navigateTo('/barbershop') });
     }
-  }
+
+    return items;
+  });
 }

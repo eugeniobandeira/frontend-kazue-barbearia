@@ -11,9 +11,9 @@ const MODULES = [RouterModule, ButtonModule];
   styleUrl: './not-found.component.scss',
 })
 export class NotFoundComponent {
-  private readonly router = inject(Router);
+  private readonly _router = inject(Router);
 
   goHome() {
-    this.router.navigate(['/']);
+    this._router.navigate(['/']);
   }
 }

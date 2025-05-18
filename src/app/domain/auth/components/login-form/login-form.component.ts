@@ -54,7 +54,6 @@ export class LoginFormComponent implements OnInit {
 
   ngOnInit() {
     this.visible = true;
-    // this._isLoading.stop();
   }
 
   showDialog() {
