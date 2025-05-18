@@ -7,18 +7,18 @@ import { AuthService } from '../services/auth.service';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
+  private readonly _authService = inject(AuthService);
+  private readonly _router = inject(Router);
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    const user = this.authService.getUser();
-    const token = this.authService.getToken();
+    const user = this._authService.getUser();
+    const token = this._authService.getToken();
 
-    if (user && token && this.authService.isTokenValid(token) && user.id) {
+    if (user && token && this._authService.isTokenValid(token) && user.id) {
       return true;
     }
 
-    this.router.navigate(['/login']);
+    this._router.navigate(['/login']);
     return false;
   }
 }

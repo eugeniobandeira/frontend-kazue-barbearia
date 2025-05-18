@@ -7,19 +7,19 @@ import { AuthService } from '../services/auth.service';
   providedIn: 'root',
 })
 export class RolesGuard implements CanActivate {
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
+  private readonly _authService = inject(AuthService);
+  private readonly _router = inject(Router);
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     const requiredRoles = next.data['roles'] as Array<string>;
 
-    const user = this.authService.getUser();
+    const user = this._authService.getUser();
     const userRole = user ? user.role : null;
 
     if (user && userRole && requiredRoles.includes(userRole)) {
       return true;
     } else {
-      this.router.navigate(['/forbidden']);
+      this._router.navigate(['/forbidden']);
       return false;
     }
   }
