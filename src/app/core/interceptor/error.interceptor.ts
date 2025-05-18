@@ -1,4 +1,3 @@
-// error.interceptor.ts
 import { HttpErrorResponse, HttpRequest, HttpHandlerFn } from '@angular/common/http';
 import { inject, Injector } from '@angular/core';
 import { Router } from '@angular/router';
