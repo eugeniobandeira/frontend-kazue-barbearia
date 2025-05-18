@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly _snackBar = inject(MatSnackBar);
 
   showSuccess(messageKey: string, params?: object): void {
     this.show(messageKey, 'success-snackbar', params);
@@ -14,7 +14,7 @@ export class NotificationService {
   }
 
   private show(messageKey: string, panelClass: string, params?: object): void {
-    this.snackBar.open(messageKey, 'OK', {
+    this._snackBar.open(messageKey, 'OK', {
       duration: 5000,
       panelClass: [panelClass],
     });
