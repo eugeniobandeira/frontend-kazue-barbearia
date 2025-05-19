@@ -27,7 +27,7 @@ export class QueueApi {
 
     params = params.set('page', req.page.toString()).set('pageSize', req.pageSize.toString());
 
-    return this._httpClient.get<iQueueResponse[]>(this.API_URL, { params });
+    return this._httpClient.get<iQueueResponse[]>(this._API_URL, { params });
   }
 
   public getById(id: number): Observable<iQueueResponse> {
