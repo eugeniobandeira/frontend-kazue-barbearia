@@ -3,7 +3,7 @@
     <div class="flex flex-col items-center gap-4 w-full h-full">
       <img
         src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcascobayhemp.com%2Fwp-content%2Fuploads%2F2023%2F04%2Fnathon-oski-EW_rqoSdDes-unsplash.jpg&f=1&nofb=1&ipt=afd77d6802e14d7300275d426002c2f05a07d6a5af87f2532918c307e2cde457"
-        alt="Imagem da barbearia"
+        alt="barbearia"
         class="w-full h-full object-cover"
       />
     </div>
@@ -25,7 +25,7 @@
               (keydown.space)="$event.preventDefault()"
               pInputText
               id="username"
-              type="username"
+              type="text"
               formControlName="username"
               autocomplete="username"
               placeholder="usuario123"
@@ -46,10 +46,9 @@
             <i class="pi pi-lock absolute left-3 text-gray-500 z-10"></i>
             <p-password
               id="password"
-              formControlName="password"
               [toggleMask]="true"
               [feedback]="false"
-              autocomplete="current-password"
+              formControlName="password"
               placeholder="Digite sua senha"
               class="w-full"
               [inputStyle]="{

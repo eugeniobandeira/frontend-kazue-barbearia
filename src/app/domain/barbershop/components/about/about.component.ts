@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 
-const MODULES = [CardModule, ButtonModule];
+const MODULES = [CardModule, ButtonModule, RouterModule];
 
 @Component({
   selector: 'app-about',

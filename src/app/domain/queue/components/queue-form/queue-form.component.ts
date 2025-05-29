@@ -46,7 +46,7 @@ export class QueueFormComponent implements OnInit {
   private readonly _authService = inject(AuthService);
   private readonly _snackBarService = inject(SnackBarService);
   private readonly _destroy$ = inject(DestroyRef);
-  private readonly router = inject(Router);
+  private readonly _router = inject(Router);
   private readonly _barbershopService = inject(BarbershopService);
 
   @Output() onSave = new EventEmitter<void>();
@@ -177,7 +177,7 @@ export class QueueFormComponent implements OnInit {
     this._snackBarService.showSnackBar('Você foi adicionado na fila com sucesso.', 3000, 'center', 'bottom');
     this.queueForm.reset();
     this.onSave.emit();
-    this.router.navigate(['/']);
+    this._router.navigate(['/']);
   }
 
   private handleError(error: any): void {

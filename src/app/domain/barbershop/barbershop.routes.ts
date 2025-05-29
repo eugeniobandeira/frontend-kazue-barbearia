@@ -5,8 +5,6 @@ export const barbershopRoutes: Routes = [
   {
     path: 'barbershop',
     loadComponent: () => import('./pages/barbershop-view/barbershop-view.component').then(c => c.BarbershopViewComponent),
-    // canActivate: [RolesGuard],
-    // data: { roles: ['admin'] },
   },
   {
     path: 'about',

@@ -29,7 +29,7 @@ export class ServiceFormComponent implements OnChanges {
   @Output() onSave = new EventEmitter<void>();
   @Input() serviceToEdit?: iServiceResponse | null;
 
-  lista: any[] = [];
+  list: any[] = [];
 
   public readonly serviceForm = createServiceFormControl();
 
@@ -58,7 +58,7 @@ export class ServiceFormComponent implements OnChanges {
 
     request$.pipe(takeUntilDestroyed(this._destroy$)).subscribe({
       next: data => {
-        this.lista = [data];
+        this.list = [data];
       },
       error: error => {
         this._snackBarService.showSnackBar(error?.error?.message, 3000, 'end', 'top');

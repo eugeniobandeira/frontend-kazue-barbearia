@@ -1,4 +1,4 @@
-export interface iLogin {
+export interface iLoginRequest {
   username: string;
   password: string;
 }

@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { createLoginFormControl } from '../../constants/login-form';
-import { SnackBarService } from '@/shared/services/snackbar.service';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { iLogin } from '../../interfaces/request/login.interface';
+import { iLoginRequest } from '../../interfaces/request/login.interface';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CalendarModule } from 'primeng/calendar';
 import { InputMaskModule } from 'primeng/inputmask';
@@ -16,7 +15,6 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '@/core/services/auth.service';
 import { MessageService } from 'primeng/api';
 import { NavigationUtils } from '@/shared/utils/navigation';
-import { LoadingService } from '@/shared/services/loading.service';
 
 const MODULES = [
   CommonModule,
@@ -42,9 +40,8 @@ const MODULES = [
   providers: [MessageService, NavigationUtils],
 })
 export class LoginFormComponent implements OnInit {
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly _destroyRef = inject(DestroyRef);
   private readonly _authService = inject(AuthService);
-  public readonly loadingService = inject(LoadingService);
   private readonly _messageService = inject(MessageService);
   private readonly _navigationUtils = inject(NavigationUtils);
 
@@ -68,11 +65,11 @@ export class LoginFormComponent implements OnInit {
     if (this.loginForm.invalid) return;
 
     const { username, password } = this.loginForm.getRawValue();
-    const req: iLogin = { username, password };
+    const req: iLoginRequest = { username, password };
 
     this._authService
       .login(req)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe({
         next: user => {
           this._messageService.add({

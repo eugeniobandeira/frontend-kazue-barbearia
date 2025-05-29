@@ -75,7 +75,7 @@ export class QueueManagerComponent implements OnInit {
   public serviceList = signal<any[]>([]);
   public statusList = signal<any[]>([]);
 
-  public dataFormatada = moment().format('YYYY-MM-DD');
+  public date = moment().format('YYYY-MM-DD');
 
   getSeverity(status: string): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' {
     return StatusUtils.getStatusSeverity(status);
@@ -90,7 +90,7 @@ export class QueueManagerComponent implements OnInit {
 
   loadQueueData(): void {
     this._queueApi
-      .getByDate(this.dataFormatada)
+      .getByDate(this.date)
       .pipe(
         finalize(() => this.loading.set(false)),
         catchError(err => {

@@ -3,7 +3,6 @@
   <app-manage-status></app-manage-status>
 
   <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-    <!-- Botão com click -->
     <div
       (click)="showDialog()"
       class="flex items-center justify-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors status-button"
@@ -12,7 +11,6 @@
       <span class="redirect">Atualizar Status Barbearia</span>
     </div>
 
-    <!-- Links com routerLink -->
     <a
       [routerLink]="['/approval']"
       class="flex items-center justify-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors status-button"

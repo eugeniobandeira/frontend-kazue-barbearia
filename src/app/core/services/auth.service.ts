@@ -3,9 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { StorageService } from './storage.service';
-import { NotificationService } from './notification.service';
 import { iUserRegisteredResponse } from '@domain/user/interfaces/user.interface';
-import { iLogin } from '@/domain/auth/interfaces/request/login.interface';
+import { iLoginRequest } from '@/domain/auth/interfaces/request/login.interface';
 import { jwtDecode } from 'jwt-decode';
 import { environment } from '@environments/environment';
 
@@ -14,7 +13,6 @@ export class AuthService {
   private readonly _http = inject(HttpClient);
   private readonly _router = inject(Router);
   private readonly _storage = inject(StorageService);
-  private readonly notification = inject(NotificationService);
   private readonly _API_URL = environment.apiUrl + '/login';
 
   private readonly userSig = signal<iUserRegisteredResponse | null>(null);
@@ -48,7 +46,7 @@ export class AuthService {
     }
   }
 
-  login(credentials: iLogin): Observable<iUserRegisteredResponse> {
+  login(credentials: iLoginRequest): Observable<iUserRegisteredResponse> {
     return this._http.post<iUserRegisteredResponse>(this._API_URL, credentials).pipe(
       tap(response => this.handleLoginSuccess(response)),
       catchError(error => this.handleAuthError(error))

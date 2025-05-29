@@ -1,6 +1,5 @@
 import { UserApi } from '@/domain/user/apis/user.api';
-import { SnackBarService } from '@/shared/services/snackbar.service';
-import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, inject, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,7 +9,6 @@ import { ButtonModule } from 'primeng/button';
 import { iUserCreateRequest } from '@/domain/user/interfaces/user.interface';
 import { createUserSignUpFormControl } from '../../constants/sign-up-form';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { CalendarModule } from 'primeng/calendar';
 import { PasswordModule } from 'primeng/password';
@@ -22,7 +20,6 @@ import { CardModule } from 'primeng/card';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
-import { LoadingService } from '@/shared/services/loading.service';
 
 const MODULES = [
   CommonModule,
@@ -55,16 +52,14 @@ const MODULES = [
 })
 export class SignUpFormComponent implements OnInit {
   private readonly _userApi = inject(UserApi);
-  public readonly loadingService = inject(LoadingService);
   private readonly _destroy$ = inject(DestroyRef);
   private readonly _messageService = inject(MessageService);
-  private readonly router = inject(Router);
-
-  @Output() onSave = new EventEmitter<void>();
+  private readonly _router = inject(Router);
 
   public readonly signupForm = createUserSignUpFormControl();
 
-  lista: any[] = [];
+  @Output() onSave = new EventEmitter<void>();
+
   showCalendar = false;
   maxDate = new Date();
 
@@ -109,9 +104,6 @@ export class SignUpFormComponent implements OnInit {
       .create(req)
       .pipe(takeUntilDestroyed(this._destroy$))
       .subscribe({
-        next: data => {
-          this.lista = [data];
-        },
         error: error => {
           this._messageService.add({
             severity: 'danger',
@@ -130,7 +122,7 @@ export class SignUpFormComponent implements OnInit {
           });
           this.signupForm.reset();
           this.onSave.emit();
-          this.router.navigate(['/login']);
+          this._router.navigate(['/login']);
         },
       });
   }
