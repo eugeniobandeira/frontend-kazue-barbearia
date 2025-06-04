@@ -18,7 +18,7 @@ interface NgxSpinnerConfig {
   template: `
     <router-outlet></router-outlet>
     <ngx-spinner name="globalSpinner" bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple">
-      <p style="font-size: 20px; color: white">Carregando...</p>
+      <p style="font-size: 20px; color: white">Carregando....</p>
     </ngx-spinner>
     <p-toast></p-toast>
   `,
