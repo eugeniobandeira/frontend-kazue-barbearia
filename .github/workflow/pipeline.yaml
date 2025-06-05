@@ -20,13 +20,16 @@ jobs:
           node-version: '21'
 
       - name: 📦 Installing dependencies
-        run: npm install --legacy-peer-deps
+        run: npm install
 
       # - name: 🧹 Linting
       #   run: npm run lint
 
       # - name: 🧪 Testing
       #   run: npm test
+
+      - name: 📦 Building project
+        run: npm run build
 
   CD:
     name: Continuous Deployment
